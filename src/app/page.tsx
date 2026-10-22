@@ -1,12 +1,12 @@
 import { FeaturedCollections } from "@/components/home/FeaturedCollections";
-import { Hero } from "@/components/home/Hero";
+import { HangingClothingRail } from "@/components/home/HangingClothingRail";
 import { ProductRail } from "@/components/home/ProductRail";
 import { PromoBanner } from "@/components/home/PromoBanner";
 
 export default function HomePage() {
   return (
     <>
-      <Hero />
+      <HangingClothingRail />
       <FeaturedCollections />
       <ProductRail
         title="New arrivals"

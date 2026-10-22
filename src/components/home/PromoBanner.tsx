@@ -15,10 +15,10 @@ export function PromoBanner() {
           />
         </div>
         <div className="flex flex-col justify-center px-4 py-12 sm:px-10 sm:py-16">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--sky)]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-400">
             WhatsApp ordering
           </p>
-          <h2 className="mt-3 font-display text-3xl tracking-[0.02em] text-neutral-900 sm:text-4xl">
+          <h2 className="mt-3 font-display text-3xl tracking-[0.04em] text-neutral-900 sm:text-4xl">
             Send your bag in a few taps
           </h2>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-neutral-500">

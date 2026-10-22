@@ -6,12 +6,12 @@ export function Footer() {
     <footer className="mt-auto border-t border-neutral-200 bg-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-3">
         <div>
-          <p className="font-display text-2xl tracking-[0.04em] text-neutral-900">
+          <p className="font-display text-2xl tracking-[0.06em] text-neutral-900">
             {STORE_NAME}
           </p>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-neutral-500">
-            Editorial essentials with calm sky accents. Browse locally, then
-            confirm your order on WhatsApp.
+            Premium streetwear with a hanging-rail browse experience. Confirm
+            orders on WhatsApp — this demo does not process card payments.
           </p>
         </div>
 
@@ -43,6 +43,16 @@ export function Footer() {
             Help
           </h2>
           <ul className="mt-4 space-y-2.5 text-sm text-neutral-500">
+            <li>
+              <Link className="transition hover:text-neutral-900" href="/about">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link className="transition hover:text-neutral-900" href="/contact">
+                Contact
+              </Link>
+            </li>
             <li>
               <Link className="transition hover:text-neutral-900" href="/cart">
                 Cart

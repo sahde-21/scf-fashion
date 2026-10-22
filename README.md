@@ -1,10 +1,11 @@
 # SCF Fashion
 
-Premium, mobile-first fashion e-commerce storefront for **SCF Fashion**.
+Premium, mobile-first streetwear storefront for **SCF Fashion**.
 
-White + sky-blue design, dual **USD / IQD** pricing, local cart persistence, and
-**WhatsApp checkout** (no card payments). Built with Next.js, TypeScript, and
-Tailwind CSS — free and open-source packages only.
+White / ivory editorial ground, black typography, neon-green announcement ticker,
+interactive hanging clothing rail, dual **USD / IQD** pricing, local cart
+persistence, and **WhatsApp checkout** (no card payments). Built with Next.js,
+TypeScript, and Tailwind CSS — free and open-source packages only.
 
 > This repository is a **local demo**. Working locally does **not** mean the site
 > is production-secure. Do not deploy secrets, enable billing, or treat the local
@@ -12,17 +13,21 @@ Tailwind CSS — free and open-source packages only.
 
 ## Features
 
-- Brand homepage with editorial hero, collections, new arrivals, popular pieces, and promo section
+- Homepage hanging clothing rail with keyboard / touch selection and “See availability”
+- Centered brand header (About · SCF Fashion · Contact) plus shop / search / cart
+- Neon-green scrolling announcement ticker (messages in `src/lib/config.ts`)
 - Full catalog with search, sort, and filters (category, size, color, price, stock)
-- Product detail pages with gallery, variants, availability, and related products
+- Product detail with color-aware imagery, optional FRONT/BACK views, sizes, related products
 - Cart with quantity updates and `localStorage` persistence
 - Checkout that builds a WhatsApp order message for `07506455249` (normalized to `wa.me/9647506455249`)
 - Copy-order fallback if WhatsApp cannot open
 - Clear notice that customers must press **Send** in WhatsApp
 - Dual currency labels (USD + IQD) with a documented fixed demo exchange rate
-- Local-only admin for product CRUD / publish state and order drafts
+- Local-only admin for product CRUD, color images, front/back URLs, publish state, order drafts
 - Loading, empty, and error states; `not-found` page; reduced-motion support
 - Accessible focus states, semantic structure, and basic SEO metadata
+
+See [`docs/ASSET_GAPS.md`](docs/ASSET_GAPS.md) for which seed products still need color / back photos.
 
 ## Stack
 
@@ -117,16 +122,18 @@ See [`docs/IMAGE_LICENSES.md`](docs/IMAGE_LICENSES.md).
 
 ## Testing checklist (manual)
 
-1. Home loads with hero, collections, and product rails
-2. Catalog filters/search/sort update results and empty state works
-3. Product detail: change size/color, add to cart, related products appear
-4. Cart persists after refresh; quantities update; remove works
-5. Checkout validates name/phone; WhatsApp link opens with full message
-6. Copy-order fallback copies the message
-7. `/admin` rejects missing/wrong password; accepts `.env.local` password
-8. Admin can add/edit/unpublish/remove products (local only)
-9. Mobile navigation and focus rings work with keyboard
-10. `npm run lint`, `npm run typecheck`, and `npm run build` succeed
+1. Home loads with hanging rail, collections, product rails, and green ticker
+2. Rail prev/next, click, keyboard arrows, and “See availability” work
+3. About / Contact pages open from the header
+4. Catalog filters/search/sort update results and empty state works
+5. Product detail: change size/color (image updates when color photos exist), add to cart
+6. FRONT/BACK appears only when `views.back` is set with a genuine asset
+7. Cart persists after refresh; quantities update; remove works
+8. Checkout validates name/phone; WhatsApp link opens with full message
+9. `/admin` rejects missing/wrong password; accepts `.env.local` password
+10. Admin can edit colors, front/back URLs, publish/unpublish (local only)
+11. Mobile navigation, ticker clearance, and focus rings work with keyboard
+12. `npm run lint`, `npm run typecheck`, and `npm run build` succeed
 
 ## Budget / safety rules honored by this project
 

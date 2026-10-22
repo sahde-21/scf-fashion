@@ -75,7 +75,7 @@ export function CartView() {
                 <button
                   type="button"
                   onClick={() => removeItem(item.key)}
-                  className="text-xs uppercase tracking-[0.12em] text-neutral-500 transition hover:text-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]"
+                  className="text-xs uppercase tracking-[0.12em] text-neutral-500 transition hover:text-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
                 >
                   Remove
                 </button>

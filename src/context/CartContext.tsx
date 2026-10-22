@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { STORAGE_KEYS } from "@/lib/config";
+import { getPrimaryImage } from "@/lib/product-images";
 import { readJson, writeJson } from "@/lib/storage";
 import { uniqueKey } from "@/lib/utils";
 import type { CartItem, Product } from "@/types";
@@ -67,7 +68,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         key,
         productId: input.product.id,
         name: input.product.name,
-        image: input.product.images[0] ?? "",
+        image:
+          getPrimaryImage(input.product, input.colorId) ||
+          input.product.images[0] ||
+          "",
         size: input.size,
         colorId: color.id,
         colorName: color.name,

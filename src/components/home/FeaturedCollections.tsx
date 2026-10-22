@@ -22,7 +22,7 @@ export function FeaturedCollections() {
           <Link
             key={category.id}
             href={`/products?category=${category.id}`}
-            className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]"
+            className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
           >
             <div className="relative aspect-[3/4] overflow-hidden bg-[var(--surface)]">
               <Image

@@ -47,7 +47,7 @@ export function ProductFiltersPanel({
         <button
           type="button"
           onClick={onReset}
-          className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]"
+          className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
         >
           Reset
         </button>
@@ -139,7 +139,7 @@ export function ProductFiltersPanel({
               aria-pressed={filters.colors.includes(color.id)}
               onClick={() => toggleColor(color.id)}
               className={cn(
-                "h-7 w-7 rounded-full border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]",
+                "h-7 w-7 rounded-full border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
                 filters.colors.includes(color.id)
                   ? "border-neutral-900 scale-110"
                   : "border-neutral-200 hover:border-neutral-400",
@@ -194,7 +194,7 @@ export function ProductFiltersPanel({
           onChange={(e) =>
             onChange({ ...filters, inStockOnly: e.target.checked })
           }
-          className="h-4 w-4 rounded-none border-neutral-300 text-neutral-900 focus:ring-[var(--sky)]"
+          className="h-4 w-4 rounded-none border-neutral-300 text-neutral-900 focus:ring-neutral-900"
         />
         In stock only
       </label>
@@ -217,7 +217,7 @@ function FilterChip({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "border px-2.5 py-1.5 text-[11px] uppercase tracking-[0.12em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]",
+        "border px-2.5 py-1.5 text-[11px] uppercase tracking-[0.12em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
         active
           ? "border-neutral-900 bg-neutral-900 text-white"
           : "border-neutral-200 text-neutral-600 hover:border-neutral-400",
