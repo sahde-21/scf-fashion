@@ -69,30 +69,11 @@ export const SEED_PRODUCTS: Product[] = [
     ],
     sizes: ["XS", "S", "M", "L", "XL"],
     colors: [
-      {
-        id: "white",
-        name: "White",
-        hex: "#FFFFFF",
-        images: [
-          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
-      {
-        id: "sky",
-        name: "Sky",
-        hex: "#7DD3FC",
-        images: [
-          "https://images.unsplash.com/photo-1576566588028-945e10aa7755?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
-      {
-        id: "ink",
-        name: "Ink",
-        hex: "#0F172A",
-        images: [
-          "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
+      // Color photos omitted: Sky URL 404s; Ink maps to a different graphic tee.
+      // Keep swatches for cart variant selection; gallery stays on base product images.
+      { id: "white", name: "White", hex: "#FFFFFF" },
+      { id: "sky", name: "Sky", hex: "#7DD3FC" },
+      { id: "ink", name: "Ink", hex: "#0F172A" },
     ],
     tags: ["basics", "cotton"],
     popular: true,
@@ -114,22 +95,9 @@ export const SEED_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     colors: [
-      {
-        id: "white",
-        name: "White",
-        hex: "#FFFFFF",
-        images: [
-          "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
-      {
-        id: "sky",
-        name: "Sky",
-        hex: "#BAE6FD",
-        images: [
-          "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
+      // Color photos omitted: prior URLs showed unrelated shirt/outfit shots, not this oxford in Sky.
+      { id: "white", name: "White", hex: "#FFFFFF" },
+      { id: "sky", name: "Sky", hex: "#BAE6FD" },
     ],
     tags: ["shirt", "oxford"],
     featured: true,
@@ -152,22 +120,9 @@ export const SEED_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     colors: [
-      {
-        id: "charcoal",
-        name: "Charcoal",
-        hex: "#334155",
-        images: [
-          "https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
-      {
-        id: "navy",
-        name: "Navy",
-        hex: "#1E3A5F",
-        images: [
-          "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
+      // Color photos omitted: prior URLs showed an olive field jacket and a navy suit, not this overcoat.
+      { id: "charcoal", name: "Charcoal", hex: "#334155" },
+      { id: "navy", name: "Navy", hex: "#1E3A5F" },
     ],
     tags: ["coat", "wool"],
     featured: true,

@@ -66,6 +66,12 @@ export function HangingClothingRail() {
   const [index, setIndex] = useState(0);
   const labelId = useId();
   const touchStartX = useRef<number | null>(null);
+  /**
+   * After a horizontal swipe, the browser still fires click on the garment
+   * under the pointer. Suppress that click so swipe navigation is not undone.
+   */
+  const suppressGarmentClick = useRef(false);
+  const goByRef = useRef<(delta: number) => void>(() => {});
 
   useEffect(() => {
     if (index >= products.length) setIndex(0);
@@ -73,10 +79,26 @@ export function HangingClothingRail() {
 
   const selected = products[index] ?? null;
 
-  const go = useCallback(
+  const goBy = useCallback(
+    (delta: number) => {
+      setIndex((current) => {
+        const len = products.length;
+        if (!len) return 0;
+        return ((current + delta) % len + len) % len;
+      });
+    },
+    [products.length],
+  );
+
+  goByRef.current = goBy;
+
+  const goTo = useCallback(
     (next: number) => {
-      if (!products.length) return;
       const len = products.length;
+      if (!len) {
+        setIndex(0);
+        return;
+      }
       setIndex(((next % len) + len) % len);
     },
     [products.length],
@@ -85,24 +107,50 @@ export function HangingClothingRail() {
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
-      go(index - 1);
+      goBy(-1);
     }
     if (e.key === "ArrowRight") {
       e.preventDefault();
-      go(index + 1);
+      goBy(1);
     }
   };
 
   const onPointerDown = (e: ReactPointerEvent) => {
-    touchStartX.current = e.clientX;
+    // Only track primary button / touch; ignore secondary clicks.
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    // Do not use setPointerCapture here — it retargets click to the zone and
+    // breaks garment button selection. Listen on window for pointerup instead.
+    const startX = e.clientX;
+    touchStartX.current = startX;
+    suppressGarmentClick.current = false;
+
+    const finish = (ev: PointerEvent) => {
+      window.removeEventListener("pointerup", finish);
+      window.removeEventListener("pointercancel", cancel);
+      if (touchStartX.current == null) return;
+      const delta = ev.clientX - startX;
+      touchStartX.current = null;
+      if (Math.abs(delta) < 40) return;
+      suppressGarmentClick.current = true;
+      goByRef.current(delta < 0 ? 1 : -1);
+    };
+
+    const cancel = () => {
+      window.removeEventListener("pointerup", finish);
+      window.removeEventListener("pointercancel", cancel);
+      touchStartX.current = null;
+    };
+
+    window.addEventListener("pointerup", finish);
+    window.addEventListener("pointercancel", cancel);
   };
 
-  const onPointerUp = (e: ReactPointerEvent) => {
-    if (touchStartX.current == null) return;
-    const delta = e.clientX - touchStartX.current;
-    touchStartX.current = null;
-    if (Math.abs(delta) < 40) return;
-    go(delta < 0 ? index + 1 : index - 1);
+  const selectGarment = (i: number) => {
+    if (suppressGarmentClick.current) {
+      suppressGarmentClick.current = false;
+      return;
+    }
+    goTo(i);
   };
 
   if (!hydrated) return <LoadingBlock label="Loading the rail…" />;
@@ -151,10 +199,7 @@ export function HangingClothingRail() {
         <div
           className="relative mx-4 touch-pan-y sm:mx-8"
           onPointerDown={onPointerDown}
-          onPointerUp={onPointerUp}
-          onPointerCancel={() => {
-            touchStartX.current = null;
-          }}
+          onDragStart={(e) => e.preventDefault()}
         >
           <div
             className="absolute left-0 right-0 top-[1.35rem] h-px bg-neutral-800 sm:top-[1.55rem]"
@@ -182,9 +227,9 @@ export function HangingClothingRail() {
                   role="option"
                   aria-selected={active}
                   aria-label={`${product.name}${active ? ", selected" : ""}`}
-                  onClick={() => setIndex(i)}
+                  onClick={() => selectGarment(i)}
                   className={cn(
-                    "group relative flex w-[18%] min-w-[4.5rem] max-w-[7.5rem] flex-col items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 sm:min-w-[5.5rem] sm:max-w-[9rem] md:w-[14%]",
+                    "group relative flex w-[18%] min-w-[4.5rem] max-w-[7.5rem] flex-col items-center select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 sm:min-w-[5.5rem] sm:max-w-[9rem] md:w-[14%]",
                     "transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
                     active
                       ? "z-10 scale-110 opacity-100"
@@ -208,8 +253,9 @@ export function HangingClothingRail() {
                         src={src}
                         alt=""
                         fill
+                        draggable={false}
                         sizes="(max-width: 640px) 20vw, 140px"
-                        className="object-cover object-top"
+                        className="pointer-events-none object-cover object-top"
                         priority={i < 3}
                       />
                     ) : (
@@ -229,21 +275,25 @@ export function HangingClothingRail() {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              go(index - 1);
+              goBy(-1);
             }}
             className="relative z-20 min-h-11 min-w-14 text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
             aria-label="Previous garment"
           >
             Prev
           </button>
-          <span className="text-[11px] tabular-nums tracking-[0.16em] text-neutral-400">
+          <span
+            className="text-[11px] tabular-nums tracking-[0.16em] text-neutral-400"
+            aria-live="polite"
+            data-testid="rail-counter"
+          >
             {index + 1} / {products.length}
           </span>
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              go(index + 1);
+              goBy(1);
             }}
             className="relative z-20 min-h-11 min-w-14 text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
             aria-label="Next garment"

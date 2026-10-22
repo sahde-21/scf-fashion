@@ -27,7 +27,8 @@ Product image URLs are defined in `src/data/products.ts`. Each URL points to an
 public launch.
 
 Optional color-variant URLs live on `colors[].images`. Optional front/back URLs
-live on `views.front` / `views.back`. See `docs/ASSET_GAPS.md` for seed coverage.
+live on `views.front` / `views.back`. Seed catalog currently ships **no** verified
+same-SKU color or front/back pairs — see `docs/ASSET_GAPS.md`.
 
 To swap images later:
 
