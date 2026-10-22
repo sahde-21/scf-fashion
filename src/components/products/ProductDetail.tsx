@@ -21,19 +21,19 @@ export function ProductDetail({ slug }: { slug: string }) {
   const related = relatedProducts(product, publishedProducts);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-      <div className="grid gap-10 lg:grid-cols-2">
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
         <ProductGallery images={product.images} name={product.name} />
         <AddToCartPanel product={product} />
       </div>
       {related.length ? (
-        <section className="mt-16">
-          <h2 className="font-display text-3xl text-slate-900">
-            You may also like
-          </h2>
-          <div className="mt-8">
-            <ProductGrid products={related} />
+        <section className="mt-16 border-t border-neutral-200 pt-12 sm:mt-20">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <h2 className="font-display text-3xl tracking-[0.02em] text-neutral-900">
+              You may also like
+            </h2>
           </div>
+          <ProductGrid products={related} />
         </section>
       ) : null}
     </div>

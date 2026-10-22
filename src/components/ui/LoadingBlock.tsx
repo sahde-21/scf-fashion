@@ -5,8 +5,10 @@ export function LoadingBlock({ label = "Loading…" }: { label?: string }) {
       role="status"
       aria-live="polite"
     >
-      <div className="h-10 w-10 animate-spin rounded-full border-2 border-sky-200 border-t-sky-500" />
-      <p className="text-sm text-slate-600">{label}</p>
+      <div className="h-8 w-8 animate-spin rounded-full border border-neutral-200 border-t-neutral-900" />
+      <p className="text-[11px] uppercase tracking-[0.16em] text-neutral-500">
+        {label}
+      </p>
     </div>
   );
 }

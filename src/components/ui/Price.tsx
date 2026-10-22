@@ -11,9 +11,26 @@ export function Price({
   compact?: boolean;
 }) {
   return (
-    <span className={cn("inline-flex flex-col gap-0.5", className)}>
-      <span className="font-medium text-slate-900">{formatUsd(usd)}</span>
-      <span className={cn("text-slate-500", compact ? "text-xs" : "text-sm")}>
+    <span
+      className={cn(
+        "inline-flex flex-wrap items-baseline gap-x-2 gap-y-0.5",
+        className,
+      )}
+    >
+      <span
+        className={cn(
+          "font-medium tracking-wide text-neutral-900",
+          compact ? "text-sm" : "text-base",
+        )}
+      >
+        {formatUsd(usd)}
+      </span>
+      <span
+        className={cn(
+          "tracking-wide text-neutral-500",
+          compact ? "text-xs" : "text-sm",
+        )}
+      >
         {formatIqd(usd)}
       </span>
     </span>
