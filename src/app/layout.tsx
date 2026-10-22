@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { DM_Sans, Syne } from "next/font/google";
+import { AnnouncementTicker } from "@/components/layout/AnnouncementTicker";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Providers } from "@/components/layout/Providers";
 import { CURRENCY_NOTE, STORE_NAME } from "@/lib/config";
 import "./globals.css";
 
-const display = Cormorant_Garamond({
+const display = Syne({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });
 
-const body = Manrope({
+const body = DM_Sans({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
@@ -21,16 +22,16 @@ const body = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: `${STORE_NAME} — Modern fashion`,
+    default: `${STORE_NAME} — Premium streetwear`,
     template: `%s · ${STORE_NAME}`,
   },
   description:
-    "SCF Fashion is a premium, mobile-first fashion storefront with dual USD/IQD pricing and WhatsApp checkout.",
+    "SCF Fashion is a premium streetwear storefront with dual USD/IQD pricing and WhatsApp checkout.",
   metadataBase: new URL("http://localhost:3000"),
   openGraph: {
     title: STORE_NAME,
     description:
-      "Soft sky tones, polished essentials, and WhatsApp ordering. Demo storefront for local development.",
+      "Bold minimal streetwear essentials and WhatsApp ordering. Demo storefront for local development.",
     type: "website",
   },
 };
@@ -56,6 +57,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
+            <AnnouncementTicker />
             <p className="sr-only">{CURRENCY_NOTE}</p>
           </div>
         </Providers>

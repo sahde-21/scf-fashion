@@ -7,7 +7,7 @@ import { CATEGORIES, STORE_NAME } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 
-const primaryLinks = [
+const shopLinks = [
   { href: "/products", label: "Shop", category: null as string | null },
   ...CATEGORIES.map((c) => ({
     href: `/products?category=${c.id}`,
@@ -60,11 +60,12 @@ function HeaderInner() {
         scrolled ? "border-neutral-200" : "border-transparent",
       )}
     >
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
-        <div className="flex items-center gap-2 lg:hidden">
+      {/* Primary bar: About | Brand | Contact */}
+      <div className="relative mx-auto grid h-14 max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:h-16 sm:px-6">
+        <div className="flex items-center gap-1 justify-self-start">
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]"
+            className="inline-flex h-10 w-10 items-center justify-center text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             onClick={() => setOpen((v) => !v)}
@@ -91,40 +92,38 @@ function HeaderInner() {
               />
             </span>
           </button>
+          <Link
+            href="/about"
+            className={cn(
+              "hidden text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-600 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 lg:inline-flex",
+              pathname === "/about" && "text-neutral-900",
+            )}
+          >
+            About
+          </Link>
         </div>
 
         <Link
           href="/"
-          className="font-display text-[1.65rem] leading-none tracking-[0.04em] text-neutral-900 transition hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)] sm:text-[1.85rem]"
+          className="justify-self-center font-display text-[1.55rem] leading-none tracking-[0.08em] text-neutral-900 transition hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 sm:text-[1.85rem]"
         >
           {STORE_NAME}
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
-          {primaryLinks.map((item) => {
-            const isActive = item.category
-              ? pathname.startsWith("/products") && activeCategory === item.category
-              : pathname.startsWith("/products") && !activeCategory;
-            return (
-              <Link
-                key={item.href + item.label}
-                href={item.href}
-                className={cn(
-                  "text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500 transition hover:text-neutral-900",
-                  isActive && "text-neutral-900",
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center justify-self-end gap-1 sm:gap-3">
+          <Link
+            href="/contact"
+            className={cn(
+              "hidden text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-600 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 lg:inline-flex",
+              pathname === "/contact" && "text-neutral-900",
+            )}
+          >
+            Contact
+          </Link>
           <button
             type="button"
             onClick={() => setSearchOpen((v) => !v)}
-            className="inline-flex h-10 items-center px-2 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-700 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]"
+            className="inline-flex h-10 items-center px-2 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-700 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
             aria-expanded={searchOpen}
             aria-controls="header-search"
           >
@@ -132,16 +131,43 @@ function HeaderInner() {
           </button>
           <Link
             href="/cart"
-            className="relative inline-flex h-10 items-center px-2 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-700 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]"
+            className="relative inline-flex h-10 items-center px-2 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-700 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
             aria-label={hydrated ? `Cart, ${itemCount} items` : "Cart"}
           >
             Cart
             {hydrated && itemCount > 0 ? (
-              <span className="ml-1 text-[var(--sky)]">({itemCount})</span>
+              <span className="ml-1 text-[var(--accent)]">({itemCount})</span>
             ) : null}
           </Link>
         </div>
       </div>
+
+      {/* Secondary shop navigation */}
+      <nav
+        className="hidden border-t border-neutral-100 lg:block"
+        aria-label="Shop"
+      >
+        <div className="mx-auto flex max-w-6xl items-center justify-center gap-7 px-6 py-2.5">
+          {shopLinks.map((item) => {
+            const isActive = item.category
+              ? pathname.startsWith("/products") &&
+                activeCategory === item.category
+              : pathname.startsWith("/products") && !activeCategory;
+            return (
+              <Link
+                key={item.href + item.label}
+                href={item.href}
+                className={cn(
+                  "text-[10px] font-medium uppercase tracking-[0.2em] transition hover:text-neutral-900",
+                  isActive ? "text-neutral-900" : "text-neutral-500",
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
 
       {searchOpen ? (
         <div
@@ -166,7 +192,7 @@ function HeaderInner() {
             />
             <button
               type="submit"
-              className="shrink-0 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-900 hover:text-[var(--sky)]"
+              className="shrink-0 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-900 hover:opacity-70"
             >
               Go
             </button>
@@ -191,7 +217,19 @@ function HeaderInner() {
           >
             Home
           </Link>
-          {primaryLinks.map((item) => (
+          <Link
+            href="/about"
+            className="border-b border-neutral-100 py-3.5 text-[12px] font-medium uppercase tracking-[0.16em] text-neutral-800"
+          >
+            About
+          </Link>
+          <Link
+            href="/contact"
+            className="border-b border-neutral-100 py-3.5 text-[12px] font-medium uppercase tracking-[0.16em] text-neutral-800"
+          >
+            Contact
+          </Link>
+          {shopLinks.map((item) => (
             <Link
               key={item.href + item.label}
               href={item.href}

@@ -192,7 +192,7 @@ export function CheckoutView() {
         </div>
 
         {prepared ? (
-          <p className="text-sm text-[var(--sky)]" role="status">
+          <p className="text-sm text-neutral-900" role="status">
             Order draft saved in this browser. Remember to press Send in WhatsApp
             if the chat opened.
           </p>

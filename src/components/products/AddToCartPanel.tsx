@@ -7,10 +7,17 @@ import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 
-export function AddToCartPanel({ product }: { product: Product }) {
+export function AddToCartPanel({
+  product,
+  colorId,
+  onColorChange,
+}: {
+  product: Product;
+  colorId: string;
+  onColorChange: (colorId: string) => void;
+}) {
   const { addItem } = useCart();
   const [size, setSize] = useState(product.sizes[0] ?? "");
-  const [colorId, setColorId] = useState(product.colors[0]?.id ?? "");
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [error, setError] = useState("");
@@ -36,7 +43,7 @@ export function AddToCartPanel({ product }: { product: Product }) {
   };
 
   return (
-    <div className="space-y-7 lg:sticky lg:top-24">
+    <div className="space-y-7 lg:sticky lg:top-28">
       <div className="space-y-3 border-b border-neutral-200 pb-6">
         <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-400">
           {product.category}
@@ -66,7 +73,7 @@ export function AddToCartPanel({ product }: { product: Product }) {
               aria-pressed={size === value}
               onClick={() => setSize(value)}
               className={cn(
-                "min-w-11 border px-3 py-2 text-xs tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]",
+                "min-w-11 border px-3 py-2 text-xs tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
                 size === value
                   ? "border-neutral-900 bg-neutral-900 text-white"
                   : "border-neutral-200 text-neutral-700 hover:border-neutral-400",
@@ -88,19 +95,25 @@ export function AddToCartPanel({ product }: { product: Product }) {
               key={c.id}
               type="button"
               title={c.name}
-              aria-label={c.name}
+              aria-label={`${c.name}${c.images?.length ? ", photo available" : ""}`}
               aria-pressed={colorId === c.id}
-              onClick={() => setColorId(c.id)}
+              onClick={() => onColorChange(c.id)}
               className={cn(
-                "h-8 w-8 rounded-full border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]",
+                "h-8 w-8 rounded-full border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
                 colorId === c.id
-                  ? "border-neutral-900 scale-110"
+                  ? "scale-110 border-neutral-900"
                   : "border-neutral-200 hover:border-neutral-400",
               )}
               style={{ backgroundColor: c.hex }}
             />
           ))}
         </div>
+        {color && !color.images?.length ? (
+          <p className="mt-2 text-xs text-neutral-400">
+            Color selected for order. A dedicated photo for this colorway is not
+            in the catalog yet.
+          </p>
+        ) : null}
       </fieldset>
 
       <label className="block max-w-[7rem] space-y-2">
@@ -123,7 +136,7 @@ export function AddToCartPanel({ product }: { product: Product }) {
         </p>
       ) : null}
       {added ? (
-        <p className="text-sm text-[var(--sky)]" role="status">
+        <p className="text-sm text-[var(--accent)]" role="status">
           Added to cart.
         </p>
       ) : null}

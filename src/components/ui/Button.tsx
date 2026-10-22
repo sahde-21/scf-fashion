@@ -44,7 +44,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-none font-medium transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-45 active:opacity-90",
+        "inline-flex items-center justify-center gap-2 rounded-none font-medium transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-45 active:scale-[0.98]",
         variantClass[variant],
         sizeClass[size],
         className,
@@ -65,7 +65,7 @@ export function ButtonLink({
   external,
 }: LinkButtonProps) {
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-none font-medium transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)] focus-visible:ring-offset-2 active:opacity-90",
+    "inline-flex items-center justify-center gap-2 rounded-none font-medium transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 active:scale-[0.98]",
     variantClass[variant],
     sizeClass[size],
     className,

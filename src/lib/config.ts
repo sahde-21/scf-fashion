@@ -24,6 +24,25 @@ export const USD_TO_IQD = 1310;
 export const CURRENCY_NOTE =
   "Prices show USD and IQD using a fixed demo rate (1 USD = 1,310 IQD). Not a live exchange rate.";
 
+/**
+ * Bottom announcement ticker copy — edit in one place.
+ * Repeated seamlessly in the UI; keep phrases short and uppercase-friendly.
+ */
+export const TICKER_MESSAGES = [
+  "SCF FASHION",
+  "NEW DROPS",
+  "STREETWEAR ESSENTIALS",
+  "NEW COLLECTION",
+  "DISCOVER YOUR STYLE",
+] as const;
+
+export const STORE_CONTACT = {
+  whatsappLocal: STORE_WHATSAPP_LOCAL,
+  whatsappDigits: STORE_WHATSAPP_E164_DIGITS,
+  email: "hello@scffashion.demo",
+  city: "Baghdad",
+} as const;
+
 export const STORAGE_KEYS = {
   cart: "scf-fashion-cart-v1",
   productOverrides: "scf-fashion-product-overrides-v1",

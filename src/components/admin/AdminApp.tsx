@@ -26,14 +26,48 @@ const emptyProduct = (): Product => ({
   images: [
     "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=80",
   ],
+  views: {},
   sizes: ["S", "M", "L"],
-  colors: [{ id: "sky", name: "Sky", hex: "#7DD3FC" }],
+  colors: [{ id: "ink", name: "Ink", hex: "#111111" }],
   tags: ["new"],
   published: true,
   inStock: true,
   createdAt: new Date().toISOString(),
   newArrival: true,
 });
+
+/** Serialize colors for the admin textarea: id|name|hex|imageUrl(optional) per line */
+function colorsToLines(
+  colors: Product["colors"],
+): string {
+  return colors
+    .map((c) => {
+      const img = c.images?.[0] ?? "";
+      return img
+        ? `${c.id}|${c.name}|${c.hex}|${img}`
+        : `${c.id}|${c.name}|${c.hex}`;
+    })
+    .join("\n");
+}
+
+function linesToColors(value: string): Product["colors"] {
+  return value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [id, name, hex, image] = line.split("|").map((s) => s.trim());
+      const color = {
+        id: id || "color",
+        name: name || id || "Color",
+        hex: hex || "#111111",
+      };
+      if (image) {
+        return { ...color, images: [image] };
+      }
+      return color;
+    });
+}
 
 export function AdminApp() {
   const {
@@ -383,6 +417,13 @@ function ProductEditor({
           images: draft.images.filter(Boolean),
           sizes: draft.sizes.filter(Boolean),
           tags: draft.tags.filter(Boolean),
+          views: {
+            front: draft.views?.front?.trim() || undefined,
+            back: draft.views?.back?.trim() || undefined,
+          },
+          colors: draft.colors.length
+            ? draft.colors
+            : [{ id: "ink", name: "Ink", hex: "#111111" }],
         });
       }}
     >
@@ -448,6 +489,46 @@ function ProductEditor({
         }
       />
       <Field
+        label="Front view URL (optional — genuine front only)"
+        value={draft.views?.front ?? ""}
+        onChange={(v) =>
+          setDraft({
+            ...draft,
+            views: { ...draft.views, front: v.trim() || undefined },
+          })
+        }
+        required={false}
+      />
+      <Field
+        label="Back view URL (optional — genuine back only)"
+        value={draft.views?.back ?? ""}
+        onChange={(v) =>
+          setDraft({
+            ...draft,
+            views: { ...draft.views, back: v.trim() || undefined },
+          })
+        }
+        required={false}
+      />
+      <label className="block space-y-1 text-sm">
+        <span className="font-medium text-slate-800">
+          Colors (one per line: id|name|hex|imageUrl?)
+        </span>
+        <textarea
+          value={colorsToLines(draft.colors)}
+          onChange={(e) =>
+            setDraft({ ...draft, colors: linesToColors(e.target.value) })
+          }
+          rows={4}
+          className="w-full rounded-md border border-sky-100 px-3 py-2 font-mono text-xs outline-none focus:ring-2 focus:ring-sky-300"
+          required
+        />
+        <span className="block text-xs text-slate-500">
+          Add a 4th column only when you have a real photo for that colorway.
+          Never use CSS tints as substitutes.
+        </span>
+      </label>
+      <Field
         label="Sizes (comma-separated)"
         value={draft.sizes.join(", ")}
         onChange={(v) =>
@@ -498,12 +579,16 @@ function Field({
   value,
   onChange,
   type = "text",
+  required,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   type?: string;
+  required?: boolean;
 }) {
+  const isRequired =
+    typeof required === "boolean" ? required : type !== "number";
   return (
     <label className="block space-y-1 text-sm">
       <span className="font-medium text-slate-800">{label}</span>
@@ -512,7 +597,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full rounded-md border border-sky-100 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-300"
-        required={type !== "number"}
+        required={isRequired}
       />
     </label>
   );

@@ -5,10 +5,25 @@ export type CategoryId =
   | "bags"
   | "accessories";
 
+/**
+ * Color swatch. Optional `images` are genuine color-variant photos only —
+ * never CSS-tinted stand-ins. When omitted, the product’s base gallery is used.
+ */
 export type ProductColor = {
   id: string;
   name: string;
   hex: string;
+  /** Color-specific gallery images (front-first). Optional and backward-compatible. */
+  images?: string[];
+};
+
+/**
+ * Explicit front/back assets. Only set when imagery genuinely matches the view.
+ * Do not invent a “back” from an unrelated alternate photo.
+ */
+export type ProductViews = {
+  front?: string;
+  back?: string;
 };
 
 export type Product = {
@@ -18,7 +33,10 @@ export type Product = {
   description: string;
   category: CategoryId;
   priceUsd: number;
+  /** Default gallery (used when the selected color has no `images`). */
   images: string[];
+  /** Optional explicit front/back views for the default / primary colorway. */
+  views?: ProductViews;
   sizes: string[];
   colors: ProductColor[];
   tags: string[];
