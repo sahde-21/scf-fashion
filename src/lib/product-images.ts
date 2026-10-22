@@ -42,6 +42,10 @@ export function getPrimaryImage(
  * Front/back views for gallery controls.
  * BACK is only returned when `product.views.back` is explicitly set —
  * never inferred from an unlabeled second gallery image.
+ *
+ * When a color has its own `images`, BACK is shown only if that color also
+ * provides a second image (treated as that colorway’s back) AND the product
+ * declares `views.back`. We never fall back to another colorway’s back photo.
  */
 export function getProductViews(
   product: Product,
@@ -51,21 +55,22 @@ export function getProductViews(
     ? product.colors.find((c) => c.id === colorId)
     : undefined;
 
-  const colorFront = color?.images?.[0];
-  const colorBack = color?.images?.[1];
+  if (color?.images?.length) {
+    const front = color.images[0];
+    const colorBack = color.images[1];
+    const back =
+      product.views?.back &&
+      colorBack &&
+      colorBack !== front
+        ? colorBack
+        : undefined;
+    return { front, back };
+  }
 
-  const front =
-    colorFront ||
-    product.views?.front ||
-    product.images[0] ||
-    undefined;
-
-  // Only expose a back control when the catalog explicitly declares one.
-  const back = product.views?.back
-    ? colorBack || product.views.back
-    : undefined;
-
-  return { front, back };
+  return {
+    front: product.views?.front || product.images[0] || undefined,
+    back: product.views?.back || undefined,
+  };
 }
 
 export function hasFrontBackPair(
