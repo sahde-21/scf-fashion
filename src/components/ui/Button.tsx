@@ -6,18 +6,17 @@ type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 const variantClass: Record<Variant, string> = {
-  primary:
-    "bg-sky-500 text-white hover:bg-sky-600 shadow-sm shadow-sky-200/60",
+  primary: "bg-neutral-900 text-white hover:bg-neutral-800",
   secondary:
-    "bg-white text-slate-900 border border-sky-200 hover:border-sky-400 hover:bg-sky-50",
-  ghost: "bg-transparent text-slate-700 hover:bg-sky-50",
-  danger: "bg-rose-600 text-white hover:bg-rose-700",
+    "bg-transparent text-neutral-900 border border-neutral-900 hover:bg-neutral-900 hover:text-white",
+  ghost: "bg-transparent text-neutral-700 hover:text-neutral-900",
+  danger: "bg-rose-700 text-white hover:bg-rose-800",
 };
 
 const sizeClass: Record<Size, string> = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2.5 text-sm",
-  lg: "px-6 py-3 text-base",
+  sm: "px-3 py-1.5 text-xs tracking-[0.12em] uppercase",
+  md: "px-5 py-2.5 text-xs tracking-[0.14em] uppercase",
+  lg: "px-7 py-3.5 text-xs tracking-[0.16em] uppercase",
 };
 
 type Common = {
@@ -45,7 +44,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md font-medium transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98]",
+        "inline-flex items-center justify-center gap-2 rounded-none font-medium transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-45 active:opacity-90",
         variantClass[variant],
         sizeClass[size],
         className,
@@ -66,7 +65,7 @@ export function ButtonLink({
   external,
 }: LinkButtonProps) {
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-md font-medium transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 active:scale-[0.98]",
+    "inline-flex items-center justify-center gap-2 rounded-none font-medium transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)] focus-visible:ring-offset-2 active:opacity-90",
     variantClass[variant],
     sizeClass[size],
     className,

@@ -16,11 +16,13 @@ export function ProductFiltersPanel({
   options,
   onChange,
   onReset,
+  className,
 }: {
   filters: Filters;
   options: Options;
   onChange: (next: Filters) => void;
   onReset: () => void;
+  className?: string;
 }) {
   const toggleSize = (size: string) => {
     const sizes = filters.sizes.includes(size)
@@ -37,37 +39,43 @@ export function ProductFiltersPanel({
   };
 
   return (
-    <aside className="space-y-6 rounded-2xl border border-sky-100 bg-white/80 p-4 sm:p-5">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="font-display text-xl text-slate-900">Filters</h2>
+    <aside className={cn("space-y-7", className)}>
+      <div className="flex items-center justify-between gap-3 border-b border-neutral-200 pb-3">
+        <h2 className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-900">
+          Filters
+        </h2>
         <button
           type="button"
           onClick={onReset}
-          className="text-sm text-sky-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+          className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]"
         >
           Reset
         </button>
       </div>
 
       <label className="block space-y-2">
-        <span className="text-sm font-medium text-slate-800">Search</span>
+        <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+          Search
+        </span>
         <input
           type="search"
           value={filters.query}
           onChange={(e) => onChange({ ...filters, query: e.target.value })}
-          placeholder="Search styles…"
-          className="w-full rounded-md border border-sky-100 bg-white px-3 py-2 text-sm outline-none ring-sky-300 transition focus:ring-2"
+          placeholder="Search styles"
+          className="editorial-input"
         />
       </label>
 
       <label className="block space-y-2">
-        <span className="text-sm font-medium text-slate-800">Sort</span>
+        <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+          Sort
+        </span>
         <select
           value={filters.sort}
           onChange={(e) =>
             onChange({ ...filters, sort: e.target.value as SortOption })
           }
-          className="w-full rounded-md border border-sky-100 bg-white px-3 py-2 text-sm outline-none ring-sky-300 transition focus:ring-2"
+          className="editorial-input"
         >
           <option value="featured">Featured</option>
           <option value="newest">Newest</option>
@@ -78,8 +86,10 @@ export function ProductFiltersPanel({
       </label>
 
       <fieldset>
-        <legend className="text-sm font-medium text-slate-800">Category</legend>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <legend className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+          Category
+        </legend>
+        <div className="mt-3 flex flex-wrap gap-2">
           <FilterChip
             active={!filters.category || filters.category === "all"}
             onClick={() => onChange({ ...filters, category: "all" })}
@@ -99,8 +109,10 @@ export function ProductFiltersPanel({
       </fieldset>
 
       <fieldset>
-        <legend className="text-sm font-medium text-slate-800">Size</legend>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <legend className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+          Size
+        </legend>
+        <div className="mt-3 flex flex-wrap gap-2">
           {options.sizes.map((size) => (
             <FilterChip
               key={size}
@@ -114,36 +126,35 @@ export function ProductFiltersPanel({
       </fieldset>
 
       <fieldset>
-        <legend className="text-sm font-medium text-slate-800">Color</legend>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <legend className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+          Color
+        </legend>
+        <div className="mt-3 flex flex-wrap gap-3">
           {options.colors.map((color) => (
             <button
               key={color.id}
               type="button"
               title={color.name}
+              aria-label={color.name}
               aria-pressed={filters.colors.includes(color.id)}
               onClick={() => toggleColor(color.id)}
               className={cn(
-                "inline-flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400",
+                "h-7 w-7 rounded-full border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]",
                 filters.colors.includes(color.id)
-                  ? "border-sky-400 bg-sky-50 text-sky-800"
-                  : "border-sky-100 bg-white text-slate-700 hover:border-sky-300",
+                  ? "border-neutral-900 scale-110"
+                  : "border-neutral-200 hover:border-neutral-400",
               )}
-            >
-              <span
-                className="h-3.5 w-3.5 rounded-full border border-slate-200"
-                style={{ backgroundColor: color.hex }}
-                aria-hidden
-              />
-              {color.name}
-            </button>
+              style={{ backgroundColor: color.hex }}
+            />
           ))}
         </div>
       </fieldset>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <label className="block space-y-2">
-          <span className="text-sm font-medium text-slate-800">Min USD</span>
+          <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+            Min USD
+          </span>
           <input
             type="number"
             min={0}
@@ -154,11 +165,13 @@ export function ProductFiltersPanel({
                 minPrice: e.target.value ? Number(e.target.value) : undefined,
               })
             }
-            className="w-full rounded-md border border-sky-100 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-300"
+            className="editorial-input"
           />
         </label>
         <label className="block space-y-2">
-          <span className="text-sm font-medium text-slate-800">Max USD</span>
+          <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+            Max USD
+          </span>
           <input
             type="number"
             min={0}
@@ -169,19 +182,19 @@ export function ProductFiltersPanel({
                 maxPrice: e.target.value ? Number(e.target.value) : undefined,
               })
             }
-            className="w-full rounded-md border border-sky-100 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-300"
+            className="editorial-input"
           />
         </label>
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-slate-700">
+      <label className="flex items-center gap-2 text-sm text-neutral-600">
         <input
           type="checkbox"
           checked={filters.inStockOnly}
           onChange={(e) =>
             onChange({ ...filters, inStockOnly: e.target.checked })
           }
-          className="h-4 w-4 rounded border-sky-300 text-sky-600 focus:ring-sky-400"
+          className="h-4 w-4 rounded-none border-neutral-300 text-neutral-900 focus:ring-[var(--sky)]"
         />
         In stock only
       </label>
@@ -204,10 +217,10 @@ function FilterChip({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "rounded-md border px-2.5 py-1.5 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400",
+        "border px-2.5 py-1.5 text-[11px] uppercase tracking-[0.12em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sky)]",
         active
-          ? "border-sky-400 bg-sky-50 text-sky-800"
-          : "border-sky-100 bg-white text-slate-700 hover:border-sky-300",
+          ? "border-neutral-900 bg-neutral-900 text-white"
+          : "border-neutral-200 text-neutral-600 hover:border-neutral-400",
       )}
     >
       {children}

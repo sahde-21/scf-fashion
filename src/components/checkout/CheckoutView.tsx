@@ -50,7 +50,10 @@ export function CheckoutView() {
       next.name = "Please enter your full name.";
     }
     const phone = form.phone.replace(/\s+/g, "");
-    if (!/^(\+?964|0)?7\d{8,9}$/.test(phone) && phone.replace(/\D/g, "").length < 10) {
+    if (
+      !/^(\+?964|0)?7\d{8,9}$/.test(phone) &&
+      phone.replace(/\D/g, "").length < 10
+    ) {
       next.phone = "Enter a valid phone number (Iraq mobile preferred).";
     }
     setErrors(next);
@@ -100,17 +103,19 @@ export function CheckoutView() {
   };
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
+    <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
       <form
-        className="space-y-5"
+        className="space-y-6"
         onSubmit={(e) => {
           e.preventDefault();
           openWhatsApp();
         }}
       >
-        <div className="rounded-2xl border border-sky-100 bg-sky-50/50 p-4 text-sm text-slate-700">
-          <p className="font-medium text-slate-900">How WhatsApp checkout works</p>
-          <ol className="mt-2 list-decimal space-y-1 pl-5">
+        <div className="border border-neutral-200 bg-[var(--surface)] p-5 text-sm text-neutral-600">
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-900">
+            How WhatsApp checkout works
+          </p>
+          <ol className="mt-3 list-decimal space-y-1.5 pl-5">
             <li>Fill in your name and phone.</li>
             <li>Open WhatsApp with a ready-made order message.</li>
             <li>
@@ -118,51 +123,55 @@ export function CheckoutView() {
               does not deliver the order by itself.
             </li>
           </ol>
-          <p className="mt-3 text-xs text-slate-500">
-            Store WhatsApp: {STORE_WHATSAPP_LOCAL} (normalized for wa.me as +
+          <p className="mt-4 text-xs text-neutral-400">
+            Store WhatsApp: {STORE_WHATSAPP_LOCAL} (wa.me +
             {STORE_WHATSAPP_E164_DIGITS}). No card payments on this site.
           </p>
         </div>
 
         <label className="block space-y-2">
-          <span className="text-sm font-medium text-slate-800">Full name</span>
+          <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+            Full name
+          </span>
           <input
             required
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full rounded-md border border-sky-100 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-300"
+            className="editorial-input"
             autoComplete="name"
           />
           {errors.name ? (
-            <span className="text-sm text-rose-600">{errors.name}</span>
+            <span className="text-sm text-rose-700">{errors.name}</span>
           ) : null}
         </label>
 
         <label className="block space-y-2">
-          <span className="text-sm font-medium text-slate-800">Phone</span>
+          <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+            Phone
+          </span>
           <input
             required
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
             placeholder="0750…"
-            className="w-full rounded-md border border-sky-100 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-300"
+            className="editorial-input"
             autoComplete="tel"
             inputMode="tel"
           />
           {errors.phone ? (
-            <span className="text-sm text-rose-600">{errors.phone}</span>
+            <span className="text-sm text-rose-700">{errors.phone}</span>
           ) : null}
         </label>
 
         <label className="block space-y-2">
-          <span className="text-sm font-medium text-slate-800">
+          <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
             Notes (optional)
           </span>
           <textarea
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             rows={4}
-            className="w-full rounded-md border border-sky-100 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-300"
+            className="editorial-input resize-y"
             placeholder="Delivery area, preferred time, sizing notes…"
           />
         </label>
@@ -183,21 +192,21 @@ export function CheckoutView() {
         </div>
 
         {prepared ? (
-          <p className="text-sm text-sky-800" role="status">
+          <p className="text-sm text-[var(--sky)]" role="status">
             Order draft saved in this browser. Remember to press Send in WhatsApp
             if the chat opened.
           </p>
         ) : null}
       </form>
 
-      <aside className="h-fit space-y-4 rounded-2xl border border-sky-100 bg-white p-5">
-        <h2 className="font-display text-2xl text-slate-900">Order summary</h2>
+      <aside className="h-fit space-y-4 border border-neutral-200 p-5">
+        <h2 className="font-display text-2xl text-neutral-900">Order summary</h2>
         <ul className="space-y-3 text-sm">
           {items.map((item) => (
             <li key={item.key} className="flex justify-between gap-3">
-              <span className="text-slate-600">
+              <span className="text-neutral-600">
                 {item.name} × {item.quantity}
-                <span className="block text-xs text-slate-400">
+                <span className="block text-xs text-neutral-400">
                   {item.size} · {item.colorName}
                 </span>
               </span>
@@ -205,13 +214,13 @@ export function CheckoutView() {
             </li>
           ))}
         </ul>
-        <div className="flex justify-between border-t border-sky-100 pt-3">
-          <span className="font-medium text-slate-900">Total</span>
+        <div className="flex justify-between border-t border-neutral-200 pt-3">
+          <span className="font-medium text-neutral-900">Total</span>
           <Price usd={subtotalUsd} compact />
         </div>
-        <p className="text-xs text-slate-500">{CURRENCY_NOTE}</p>
-        <details className="rounded-md bg-slate-50 p-3 text-xs text-slate-600">
-          <summary className="cursor-pointer font-medium text-slate-800">
+        <p className="text-xs text-neutral-400">{CURRENCY_NOTE}</p>
+        <details className="border border-neutral-200 p-3 text-xs text-neutral-600">
+          <summary className="cursor-pointer font-medium text-neutral-800">
             Preview WhatsApp message
           </summary>
           <pre className="mt-3 whitespace-pre-wrap font-sans">{message}</pre>

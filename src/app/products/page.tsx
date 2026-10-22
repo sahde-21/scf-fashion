@@ -11,14 +11,13 @@ export const metadata: Metadata = {
 
 export default function ProductsPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-      <div className="mb-8 max-w-2xl">
-        <h1 className="font-display text-4xl text-slate-900 sm:text-5xl">
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <div className="mb-8 border-b border-neutral-200 pb-6 sm:mb-10">
+        <h1 className="font-display text-4xl tracking-[0.02em] text-neutral-900 sm:text-5xl">
           Shop
         </h1>
-        <p className="mt-3 text-slate-600">
-          Search, sort, and filter the full catalog. Every price is labelled in
-          both USD and IQD using a fixed demo rate.
+        <p className="mt-3 max-w-xl text-sm text-neutral-500">
+          Photography-first browsing with dual USD and IQD pricing.
         </p>
       </div>
       <Suspense fallback={<LoadingBlock label="Loading catalog…" />}>
