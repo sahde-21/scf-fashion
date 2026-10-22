@@ -1,8 +1,16 @@
+import { filterValidImageUrls } from "@/lib/image-url";
 import type { Product, ProductColor, ProductViews } from "@/types";
+
+function uniqueUrls(urls: Array<string | undefined | null>): string[] {
+  return filterValidImageUrls(
+    urls.filter((src): src is string => Boolean(src)),
+  ).filter((src, index, arr) => arr.indexOf(src) === index);
+}
 
 /**
  * Resolve the gallery for a product + optional color.
  * Uses color.images only when present; never invents tinted substitutes.
+ * Invalid / empty URLs are dropped so the UI can fall back safely.
  */
 export function getGalleryImages(
   product: Product,
@@ -11,20 +19,14 @@ export function getGalleryImages(
   if (colorId) {
     const color = product.colors.find((c) => c.id === colorId);
     if (color?.images?.length) {
-      return color.images.filter(Boolean);
+      const colorGallery = uniqueUrls(color.images);
+      if (colorGallery.length) return colorGallery;
     }
   }
 
-  const base = (product.images ?? []).filter(Boolean);
+  const base = uniqueUrls(product.images ?? []);
   if (product.views?.front || product.views?.back) {
-    const ordered = [
-      product.views.front,
-      product.views.back,
-      ...base,
-    ].filter((src, index, arr): src is string =>
-      Boolean(src) && arr.indexOf(src) === index,
-    );
-    return ordered;
+    return uniqueUrls([product.views.front, product.views.back, ...base]);
   }
 
   return base;
@@ -43,9 +45,13 @@ export function getPrimaryImage(
  * BACK is only returned when `product.views.back` is explicitly set —
  * never inferred from an unlabeled second gallery image.
  *
- * When a color has its own `images`, BACK is shown only if that color also
- * provides a second image (treated as that colorway’s back) AND the product
- * declares `views.back`. We never fall back to another colorway’s back photo.
+ * When a color has its own `images`:
+ * - front = color.images[0]
+ * - back = color.images[1] only when it differs from front AND `views.back`
+ *   is set on the product (admin asserts a real back exists).
+ * We never substitute another colorway’s photo as this color’s back.
+ *
+ * When the selected color has no `images`, product-level `views` apply.
  */
 export function getProductViews(
   product: Product,
@@ -56,10 +62,12 @@ export function getProductViews(
     : undefined;
 
   if (color?.images?.length) {
-    const front = color.images[0];
-    const colorBack = color.images[1];
+    const colorGallery = uniqueUrls(color.images);
+    const front = colorGallery[0];
+    const colorBack = colorGallery[1];
+    const productBack = uniqueUrls([product.views?.back])[0];
     const back =
-      product.views?.back &&
+      productBack &&
       colorBack &&
       colorBack !== front
         ? colorBack
@@ -67,9 +75,10 @@ export function getProductViews(
     return { front, back };
   }
 
+  const base = uniqueUrls(product.images ?? []);
   return {
-    front: product.views?.front || product.images[0] || undefined,
-    back: product.views?.back || undefined,
+    front: uniqueUrls([product.views?.front])[0] || base[0] || undefined,
+    back: uniqueUrls([product.views?.back])[0] || undefined,
   };
 }
 

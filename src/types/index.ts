@@ -38,6 +38,12 @@ export type Product = {
   /** Optional explicit front/back views for the default / primary colorway. */
   views?: ProductViews;
   sizes: string[];
+  /**
+   * Optional demo inventory per size. When present, storefront availability
+   * and cart quantity limits use these counts. When omitted, `inStock` alone
+   * applies (legacy seed behavior). Not a production warehouse system.
+   */
+  stockBySize?: Record<string, number>;
   colors: ProductColor[];
   tags: string[];
   featured?: boolean;

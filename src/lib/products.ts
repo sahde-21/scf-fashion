@@ -1,4 +1,5 @@
 import { SEED_PRODUCTS } from "@/data/products";
+import { isProductAvailable, withDerivedAvailability } from "@/lib/inventory";
 import type { CategoryId, Product, ProductFilters, SortOption } from "@/types";
 
 export type ProductOverrideMap = Record<string, Partial<Product> | null>;
@@ -7,7 +8,7 @@ export function mergeProducts(overrides: ProductOverrideMap = {}): Product[] {
   const byId = new Map<string, Product>();
 
   for (const seed of SEED_PRODUCTS) {
-    byId.set(seed.id, { ...seed });
+    byId.set(seed.id, withDerivedAvailability({ ...seed }));
   }
 
   for (const [id, override] of Object.entries(overrides)) {
@@ -17,9 +18,12 @@ export function mergeProducts(overrides: ProductOverrideMap = {}): Product[] {
     }
     const existing = byId.get(id);
     if (existing) {
-      byId.set(id, { ...existing, ...override, id });
+      byId.set(
+        id,
+        withDerivedAvailability({ ...existing, ...override, id }),
+      );
     } else if (override.id && override.slug && override.name) {
-      byId.set(id, override as Product);
+      byId.set(id, withDerivedAvailability(override as Product));
     }
   }
 
@@ -113,7 +117,7 @@ export function filterProducts(
   }
 
   if (filters.inStockOnly) {
-    result = result.filter((p) => p.inStock);
+    result = result.filter((p) => isProductAvailable(p));
   }
 
   return sortProducts(result, filters.sort);

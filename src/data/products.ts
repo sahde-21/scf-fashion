@@ -22,6 +22,12 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "ivory", name: "Ivory", hex: "#F5F0E8" },
       { id: "sky", name: "Sky", hex: "#7DD3FC" },
     ],
+    stockBySize: {
+      "XS": 4,
+      "S": 8,
+      "M": 10,
+      "L": 6
+    },
     tags: ["blazer", "linen", "work"],
     featured: true,
     newArrival: true,
@@ -47,6 +53,13 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "azure", name: "Azure", hex: "#38BDF8" },
       { id: "blush", name: "Blush", hex: "#F9C5D1" },
     ],
+    stockBySize: {
+      "XS": 3,
+      "S": 7,
+      "M": 9,
+      "L": 5,
+      "XL": 2
+    },
     tags: ["dress", "silk", "evening"],
     featured: true,
     newArrival: true,
@@ -69,12 +82,25 @@ export const SEED_PRODUCTS: Product[] = [
     ],
     sizes: ["XS", "S", "M", "L", "XL"],
     colors: [
-      // Color photos omitted: Sky URL 404s; Ink maps to a different graphic tee.
-      // Keep swatches for cart variant selection; gallery stays on base product images.
-      { id: "white", name: "White", hex: "#FFFFFF" },
+      // White matches the primary studio photo. Sky/Ink still lack verified same-SKU shots.
+      {
+        id: "white",
+        name: "White",
+        hex: "#FFFFFF",
+        images: [
+          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80",
+        ],
+      },
       { id: "sky", name: "Sky", hex: "#7DD3FC" },
       { id: "ink", name: "Ink", hex: "#0F172A" },
     ],
+    stockBySize: {
+      "XS": 6,
+      "S": 14,
+      "M": 18,
+      "L": 12,
+      "XL": 4
+    },
     tags: ["basics", "cotton"],
     popular: true,
     published: true,
@@ -99,6 +125,12 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "white", name: "White", hex: "#FFFFFF" },
       { id: "sky", name: "Sky", hex: "#BAE6FD" },
     ],
+    stockBySize: {
+      "S": 5,
+      "M": 11,
+      "L": 8,
+      "XL": 3
+    },
     tags: ["shirt", "oxford"],
     featured: true,
     newArrival: true,
@@ -124,6 +156,12 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "charcoal", name: "Charcoal", hex: "#334155" },
       { id: "navy", name: "Navy", hex: "#1E3A5F" },
     ],
+    stockBySize: {
+      "S": 2,
+      "M": 4,
+      "L": 3,
+      "XL": 1
+    },
     tags: ["coat", "wool"],
     featured: true,
     popular: true,
@@ -148,6 +186,13 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "sand", name: "Sand", hex: "#E7E5E4" },
       { id: "olive", name: "Olive", hex: "#78716C" },
     ],
+    stockBySize: {
+      "28": 4,
+      "30": 9,
+      "32": 12,
+      "34": 7,
+      "36": 3
+    },
     tags: ["pants", "chino"],
     newArrival: true,
     published: true,
@@ -171,6 +216,15 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "white", name: "White", hex: "#FFFFFF" },
       { id: "sky", name: "Sky", hex: "#7DD3FC" },
     ],
+    stockBySize: {
+      "37": 2,
+      "38": 4,
+      "39": 6,
+      "40": 8,
+      "41": 5,
+      "42": 4,
+      "43": 2
+    },
     tags: ["sneakers", "comfort"],
     featured: true,
     popular: true,
@@ -196,6 +250,13 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "nude", name: "Nude", hex: "#E8D5C4" },
       { id: "black", name: "Black", hex: "#111827" },
     ],
+    stockBySize: {
+      "36": 3,
+      "37": 5,
+      "38": 6,
+      "39": 4,
+      "40": 2
+    },
     tags: ["heels", "leather"],
     popular: true,
     published: true,
@@ -219,6 +280,14 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "cognac", name: "Cognac", hex: "#9A3412" },
       { id: "black", name: "Black", hex: "#111827" },
     ],
+    stockBySize: {
+      "39": 2,
+      "40": 5,
+      "41": 7,
+      "42": 6,
+      "43": 3,
+      "44": 1
+    },
     tags: ["loafers", "leather"],
     newArrival: true,
     published: true,
@@ -242,6 +311,9 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "cream", name: "Cream", hex: "#FAF7F2" },
       { id: "sky", name: "Sky", hex: "#7DD3FC" },
     ],
+    stockBySize: {
+      "One size": 9
+    },
     tags: ["tote", "work"],
     featured: true,
     popular: true,
@@ -266,6 +338,9 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "tan", name: "Tan", hex: "#D6B48C" },
       { id: "ink", name: "Ink", hex: "#0F172A" },
     ],
+    stockBySize: {
+      "One size": 11
+    },
     tags: ["crossbody", "everyday"],
     newArrival: true,
     published: true,
@@ -289,6 +364,9 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "silver", name: "Silver", hex: "#E2E8F0" },
       { id: "sky", name: "Sky", hex: "#38BDF8" },
     ],
+    stockBySize: {
+      "One size": 7
+    },
     tags: ["clutch", "evening"],
     published: true,
     inStock: true,
@@ -308,6 +386,9 @@ export const SEED_PRODUCTS: Product[] = [
     ],
     sizes: ["One size"],
     colors: [{ id: "gold", name: "Gold", hex: "#D4AF37" }],
+    stockBySize: {
+      "One size": 15
+    },
     tags: ["jewelry", "earrings"],
     popular: true,
     newArrival: true,
@@ -332,6 +413,9 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "sky", name: "Sky", hex: "#7DD3FC" },
       { id: "ivory", name: "Ivory", hex: "#F5F0E8" },
     ],
+    stockBySize: {
+      "One size": 10
+    },
     tags: ["scarf", "silk"],
     featured: true,
     published: true,
@@ -355,6 +439,13 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "black", name: "Black", hex: "#111827" },
       { id: "cognac", name: "Cognac", hex: "#9A3412" },
     ],
+    stockBySize: {
+      "80": 3,
+      "85": 6,
+      "90": 8,
+      "95": 5,
+      "100": 2
+    },
     tags: ["belt", "leather"],
     published: true,
     inStock: true,
@@ -377,6 +468,9 @@ export const SEED_PRODUCTS: Product[] = [
       { id: "white", name: "White", hex: "#FFFFFF" },
       { id: "sky", name: "Sky", hex: "#7DD3FC" },
     ],
+    stockBySize: {
+      "One size": 0
+    },
     tags: ["cap", "casual"],
     newArrival: true,
     published: true,
