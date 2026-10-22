@@ -146,11 +146,16 @@ export function HangingClothingRail() {
         aria-label="Hanging garments"
         aria-activedescendant={selected ? `rail-item-${selected.id}` : undefined}
         onKeyDown={onKeyDown}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
       >
-        {/* Horizontal rail */}
-        <div className="relative mx-4 sm:mx-8">
+        {/* Swipe zone: garments only — controls stay outside pointer handlers */}
+        <div
+          className="relative mx-4 touch-pan-y sm:mx-8"
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={() => {
+            touchStartX.current = null;
+          }}
+        >
           <div
             className="absolute left-0 right-0 top-[1.35rem] h-px bg-neutral-800 sm:top-[1.55rem]"
             aria-hidden
@@ -222,8 +227,11 @@ export function HangingClothingRail() {
         <div className="mt-6 flex items-center justify-center gap-6">
           <button
             type="button"
-            onClick={() => go(index - 1)}
-            className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+            onClick={(e) => {
+              e.stopPropagation();
+              go(index - 1);
+            }}
+            className="relative z-20 min-h-11 min-w-14 text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
             aria-label="Previous garment"
           >
             Prev
@@ -233,8 +241,11 @@ export function HangingClothingRail() {
           </span>
           <button
             type="button"
-            onClick={() => go(index + 1)}
-            className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+            onClick={(e) => {
+              e.stopPropagation();
+              go(index + 1);
+            }}
+            className="relative z-20 min-h-11 min-w-14 text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500 transition hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
             aria-label="Next garment"
           >
             Next
@@ -257,8 +268,12 @@ export function HangingClothingRail() {
           <div className="mt-3 flex justify-center">
             <Price usd={selected.priceUsd} compact />
           </div>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <ButtonLink href={`/products/${selected.slug}`} size="lg">
+          <div className="relative z-20 mt-8 flex flex-wrap items-center justify-center gap-3">
+            <ButtonLink
+              href={`/products/${selected.slug}`}
+              size="lg"
+              className="min-h-12"
+            >
               See availability
             </ButtonLink>
             <Link

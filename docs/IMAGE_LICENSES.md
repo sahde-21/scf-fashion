@@ -26,8 +26,11 @@ Product image URLs are defined in `src/data/products.ts`. Each URL points to an
 `images.unsplash.com` asset. Replace them with your own licensed photos before any
 public launch.
 
+Optional color-variant URLs live on `colors[].images`. Optional front/back URLs
+live on `views.front` / `views.back`. See `docs/ASSET_GAPS.md` for seed coverage.
+
 To swap images later:
 
 1. Add files under `public/products/` or use another free-licensed host.
-2. Update the `images` array on each product in seed data or via the local admin UI.
+2. Update `images`, `colors[].images`, and/or `views` in seed data or via local admin.
 3. If using a new remote host, allow it in `next.config.ts` `images.remotePatterns`.
