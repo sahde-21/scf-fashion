@@ -23,7 +23,7 @@ TypeScript, and Tailwind CSS — free and open-source packages only.
 - Copy-order fallback if WhatsApp cannot open
 - Clear notice that customers must press **Send** in WhatsApp
 - Dual currency labels (USD + IQD) with a documented fixed demo exchange rate
-- Local-only admin for product CRUD, color images, front/back URLs, publish state, order drafts
+- Local-only admin for product CRUD, color images, front/back URLs, per-size demo stock, publish state, order drafts
 - Loading, empty, and error states; `not-found` page; reduced-motion support
 - Accessible focus states, semantic structure, and basic SEO metadata
 
@@ -131,7 +131,7 @@ See [`docs/IMAGE_LICENSES.md`](docs/IMAGE_LICENSES.md).
 7. Cart persists after refresh; quantities update; remove works
 8. Checkout validates name/phone; WhatsApp link opens with full message
 9. `/admin` rejects missing/wrong password; accepts `.env.local` password
-10. Admin can edit colors, front/back URLs, publish/unpublish (local only)
+10. Admin can edit colors, front/back URLs, per-size stock, publish/unpublish (local only)
 11. Mobile navigation, ticker clearance, and focus rings work with keyboard
 12. `npm run lint`, `npm run typecheck`, and `npm run build` succeed
 

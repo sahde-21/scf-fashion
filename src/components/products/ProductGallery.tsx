@@ -33,22 +33,45 @@ export function ProductGallery({
     showFrontBack ? "front" : "gallery",
   );
   const [active, setActive] = useState(0);
+  const [broken, setBroken] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setActive(0);
     setMode(hasFrontBackPair(product, colorId) ? "front" : "gallery");
+    setBroken(new Set());
   }, [product.id, colorId, product]);
 
+  const markBroken = (src: string) => {
+    setBroken((prev) => {
+      if (prev.has(src)) return prev;
+      const next = new Set(prev);
+      next.add(src);
+      return next;
+    });
+  };
+
+  const usableGallery = useMemo(
+    () => gallery.filter((src) => !broken.has(src)),
+    [gallery, broken],
+  );
+
   const current = useMemo(() => {
-    if (showFrontBack && mode === "front") return views.front ?? gallery[0];
-    if (showFrontBack && mode === "back") return views.back ?? gallery[0];
-    return gallery[active] ?? gallery[0];
-  }, [showFrontBack, mode, views, gallery, active]);
+    if (showFrontBack && mode === "front") {
+      const front = views.front;
+      if (front && !broken.has(front)) return front;
+    }
+    if (showFrontBack && mode === "back") {
+      const back = views.back;
+      if (back && !broken.has(back)) return back;
+    }
+    const fromGallery = usableGallery[active] ?? usableGallery[0];
+    return fromGallery;
+  }, [showFrontBack, mode, views, usableGallery, active, broken]);
 
   if (!current) {
     return (
-      <div className="flex aspect-[3/4] items-center justify-center bg-[var(--surface)] text-sm text-neutral-500">
-        No image available
+      <div className="flex aspect-[3/4] items-center justify-center bg-[var(--surface)] px-6 text-center text-sm text-neutral-500">
+        No verified image available for this selection.
       </div>
     );
   }
@@ -61,7 +84,7 @@ export function ProductGallery({
           alt={`${product.name}${
             showFrontBack && mode !== "gallery"
               ? ` — ${mode} view`
-              : gallery.length > 1
+              : usableGallery.length > 1
                 ? ` — view ${active + 1}`
                 : ""
           }`}
@@ -70,6 +93,7 @@ export function ProductGallery({
           sizes="(max-width: 768px) 100vw, 55vw"
           className="object-cover animate-image-swap"
           key={current}
+          onError={() => markBroken(current)}
         />
       </div>
 
@@ -79,28 +103,34 @@ export function ProductGallery({
           role="group"
           aria-label="Product view"
         >
-          {(["front", "back"] as const).map((view) => (
-            <button
-              key={view}
-              type="button"
-              aria-pressed={mode === view}
-              onClick={() => setMode(view)}
-              className={cn(
-                "min-w-[5.5rem] border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
-                mode === view
-                  ? "border-neutral-900 bg-neutral-900 text-white"
-                  : "border-neutral-200 text-neutral-600 hover:border-neutral-400",
-              )}
-            >
-              {view}
-            </button>
-          ))}
+          {(["front", "back"] as const).map((view) => {
+            const src = view === "front" ? views.front : views.back;
+            const disabled = !src || broken.has(src);
+            return (
+              <button
+                key={view}
+                type="button"
+                aria-pressed={mode === view}
+                disabled={disabled}
+                onClick={() => setMode(view)}
+                className={cn(
+                  "min-w-[5.5rem] border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
+                  mode === view
+                    ? "border-neutral-900 bg-neutral-900 text-white"
+                    : "border-neutral-200 text-neutral-600 hover:border-neutral-400",
+                  disabled && "cursor-not-allowed opacity-40",
+                )}
+              >
+                {view}
+              </button>
+            );
+          })}
         </div>
       ) : null}
 
-      {gallery.length > 1 ? (
+      {usableGallery.length > 1 ? (
         <div className="flex gap-2 overflow-x-auto pb-1">
-          {gallery.map((src, index) => {
+          {usableGallery.map((src, index) => {
             const isFront = showFrontBack && src === views.front;
             const isBack = showFrontBack && src === views.back;
             const selected =
@@ -135,7 +165,14 @@ export function ProductGallery({
                     : "border-transparent opacity-70 hover:opacity-100",
                 )}
               >
-                <Image src={src} alt="" fill className="object-cover" sizes="72px" />
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="72px"
+                  onError={() => markBroken(src)}
+                />
               </button>
             );
           })}

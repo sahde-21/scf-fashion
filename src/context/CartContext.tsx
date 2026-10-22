@@ -10,6 +10,11 @@ import {
   type ReactNode,
 } from "react";
 import { STORAGE_KEYS } from "@/lib/config";
+import {
+  getStockForSize,
+  isSizeAvailable,
+  maxOrderQuantity,
+} from "@/lib/inventory";
 import { getPrimaryImage } from "@/lib/product-images";
 import { readJson, writeJson } from "@/lib/storage";
 import { uniqueKey } from "@/lib/utils";
@@ -22,12 +27,14 @@ type AddToCartInput = {
   quantity?: number;
 };
 
+type AddToCartResult = { ok: true } | { ok: false; error: string };
+
 type CartContextValue = {
   items: CartItem[];
   itemCount: number;
   subtotalUsd: number;
   hydrated: boolean;
-  addItem: (input: AddToCartInput) => void;
+  addItem: (input: AddToCartInput) => AddToCartResult;
   removeItem: (key: string) => void;
   updateQuantity: (key: string, quantity: number) => void;
   clearCart: () => void;
@@ -49,38 +56,84 @@ export function CartProvider({ children }: { children: ReactNode }) {
     writeJson(STORAGE_KEYS.cart, items);
   }, [items, hydrated]);
 
-  const addItem = useCallback((input: AddToCartInput) => {
-    const color = input.product.colors.find((c) => c.id === input.colorId);
-    if (!color) return;
-    const key = uniqueKey(input.product.id, input.size, input.colorId);
-    const quantity = Math.max(1, input.quantity ?? 1);
-
-    setItems((prev) => {
-      const existing = prev.find((item) => item.key === key);
-      if (existing) {
-        return prev.map((item) =>
-          item.key === key
-            ? { ...item, quantity: item.quantity + quantity }
-            : item,
-        );
+  const addItem = useCallback(
+    (input: AddToCartInput): AddToCartResult => {
+      const color = input.product.colors.find((c) => c.id === input.colorId);
+      if (!color) {
+        return { ok: false, error: "Please choose a valid color." };
       }
-      const next: CartItem = {
-        key,
-        productId: input.product.id,
-        name: input.product.name,
-        image:
-          getPrimaryImage(input.product, input.colorId) ||
-          input.product.images[0] ||
-          "",
-        size: input.size,
-        colorId: color.id,
-        colorName: color.name,
-        quantity,
-        priceUsd: input.product.priceUsd,
-      };
-      return [...prev, next];
-    });
-  }, []);
+      if (!input.product.sizes.includes(input.size)) {
+        return { ok: false, error: "Please choose a valid size." };
+      }
+      if (!isSizeAvailable(input.product, input.size)) {
+        return {
+          ok: false,
+          error: `Size ${input.size} is out of stock.`,
+        };
+      }
+
+      const key = uniqueKey(input.product.id, input.size, input.colorId);
+      const requested = Math.max(1, input.quantity ?? 1);
+      const cap = maxOrderQuantity(input.product, input.size);
+      const stock = getStockForSize(input.product, input.size);
+      const image =
+        getPrimaryImage(input.product, input.colorId) ||
+        input.product.images[0] ||
+        "";
+
+      const existing = items.find((item) => item.key === key);
+      const already = existing?.quantity ?? 0;
+      const room = Math.max(0, cap - already);
+      if (requested > room) {
+        return {
+          ok: false,
+          error:
+            stock === null
+              ? room < 1
+                ? "Cannot add more of this item."
+                : `Only ${room} more can be added.`
+              : `Only ${stock} available in size ${input.size}${
+                  already ? ` (${already} already in cart)` : ""
+                }.`,
+        };
+      }
+
+      setItems((prev) => {
+        const current = prev.find((item) => item.key === key);
+        if (current) {
+          return prev.map((item) =>
+            item.key === key
+              ? {
+                  ...item,
+                  quantity: item.quantity + requested,
+                  name: input.product.name,
+                  image,
+                  colorName: color.name,
+                  priceUsd: input.product.priceUsd,
+                }
+              : item,
+          );
+        }
+        return [
+          ...prev,
+          {
+            key,
+            productId: input.product.id,
+            name: input.product.name,
+            image,
+            size: input.size,
+            colorId: color.id,
+            colorName: color.name,
+            quantity: requested,
+            priceUsd: input.product.priceUsd,
+          },
+        ];
+      });
+
+      return { ok: true };
+    },
+    [items],
+  );
 
   const removeItem = useCallback((key: string) => {
     setItems((prev) => prev.filter((item) => item.key !== key));

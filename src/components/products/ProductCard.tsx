@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Price } from "@/components/ui/Price";
+import { isProductAvailable } from "@/lib/inventory";
 import { getGalleryImages } from "@/lib/product-images";
 import type { Product } from "@/types";
 
@@ -14,6 +15,7 @@ export function ProductCard({ product }: { product: Product }) {
   const primary = gallery[0] ?? "";
   const secondary = gallery[1] && gallery[1] !== primary ? gallery[1] : null;
   const showAlt = hovered && secondary;
+  const available = isProductAvailable(product);
 
   return (
     <article className="group animate-fade-up">
@@ -40,7 +42,7 @@ export function ProductCard({ product }: { product: Product }) {
           )}
           <div className="absolute left-2 top-2 flex flex-col gap-1">
             {product.newArrival ? <Badge>New</Badge> : null}
-            {!product.inStock ? <Badge tone="rose">Sold out</Badge> : null}
+            {!available ? <Badge tone="rose">Sold out</Badge> : null}
           </div>
         </div>
         <div className="mt-3 space-y-1.5">

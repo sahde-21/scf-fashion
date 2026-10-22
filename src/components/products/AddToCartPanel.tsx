@@ -1,9 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Price } from "@/components/ui/Price";
 import { useCart } from "@/context/CartContext";
+import {
+  getStockForSize,
+  isProductAvailable,
+  isSizeAvailable,
+  maxOrderQuantity,
+} from "@/lib/inventory";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 
@@ -17,19 +23,45 @@ export function AddToCartPanel({
   onColorChange: (colorId: string) => void;
 }) {
   const { addItem } = useCart();
-  const [size, setSize] = useState(product.sizes[0] ?? "");
+  const available = isProductAvailable(product);
+  const firstAvailableSize =
+    product.sizes.find((value) => isSizeAvailable(product, value)) ??
+    product.sizes[0] ??
+    "";
+
+  const [size, setSize] = useState(firstAvailableSize);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const nextSize =
+      product.sizes.find((value) => isSizeAvailable(product, value)) ??
+      product.sizes[0] ??
+      "";
+    setSize(nextSize);
+    setQuantity(1);
+    setError("");
+    setAdded(false);
+  }, [product.id, product]);
 
   const color = useMemo(
     () => product.colors.find((c) => c.id === colorId),
     [product.colors, colorId],
   );
 
+  const sizeStock = getStockForSize(product, size);
+  const qtyCap = maxOrderQuantity(product, size);
+
+  useEffect(() => {
+    if (qtyCap > 0 && quantity > qtyCap) {
+      setQuantity(qtyCap);
+    }
+  }, [qtyCap, quantity]);
+
   const onAdd = () => {
     setError("");
-    if (!product.inStock) {
+    if (!available) {
       setError("This piece is currently sold out.");
       return;
     }
@@ -37,7 +69,23 @@ export function AddToCartPanel({
       setError("Please choose a size and color.");
       return;
     }
-    addItem({ product, size, colorId, quantity });
+    if (!isSizeAvailable(product, size)) {
+      setError(`Size ${size} is out of stock.`);
+      return;
+    }
+    if (quantity > qtyCap) {
+      setError(
+        sizeStock === null
+          ? "Quantity is not available."
+          : `Only ${sizeStock} left in size ${size}.`,
+      );
+      return;
+    }
+    const result = addItem({ product, size, colorId, quantity });
+    if (!result.ok) {
+      setError(result.error || "Could not add to cart.");
+      return;
+    }
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
   };
@@ -53,7 +101,13 @@ export function AddToCartPanel({
         </h1>
         <Price usd={product.priceUsd} />
         <p className="text-sm text-neutral-500">
-          {product.inStock ? "In stock" : "Currently unavailable"}
+          {available ? "In stock" : "Currently unavailable"}
+          {available && sizeStock !== null ? (
+            <span className="text-neutral-400">
+              {" "}
+              · {sizeStock} left in {size}
+            </span>
+          ) : null}
         </p>
       </div>
 
@@ -66,22 +120,36 @@ export function AddToCartPanel({
           Size
         </legend>
         <div className="mt-3 flex flex-wrap gap-2">
-          {product.sizes.map((value) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={size === value}
-              onClick={() => setSize(value)}
-              className={cn(
-                "min-w-11 border px-3 py-2 text-xs tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
-                size === value
-                  ? "border-neutral-900 bg-neutral-900 text-white"
-                  : "border-neutral-200 text-neutral-700 hover:border-neutral-400",
-              )}
-            >
-              {value}
-            </button>
-          ))}
+          {product.sizes.map((value) => {
+            const sizeOk = isSizeAvailable(product, value);
+            const stock = getStockForSize(product, value);
+            return (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={size === value}
+                disabled={!sizeOk}
+                title={
+                  stock === null
+                    ? value
+                    : sizeOk
+                      ? `${value} — ${stock} available`
+                      : `${value} — out of stock`
+                }
+                onClick={() => setSize(value)}
+                className={cn(
+                  "min-w-11 border px-3 py-2 text-xs tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
+                  size === value
+                    ? "border-neutral-900 bg-neutral-900 text-white"
+                    : "border-neutral-200 text-neutral-700 hover:border-neutral-400",
+                  !sizeOk &&
+                    "cursor-not-allowed border-neutral-100 text-neutral-300 line-through hover:border-neutral-100",
+                )}
+              >
+                {value}
+              </button>
+            );
+          })}
         </div>
       </fieldset>
 
@@ -123,9 +191,17 @@ export function AddToCartPanel({
         <input
           type="number"
           min={1}
-          max={20}
+          max={Math.max(1, qtyCap)}
           value={quantity}
-          onChange={(e) => setQuantity(Math.max(1, Number(e.target.value) || 1))}
+          disabled={!available || qtyCap < 1}
+          onChange={(e) =>
+            setQuantity(
+              Math.min(
+                Math.max(1, Number(e.target.value) || 1),
+                Math.max(1, qtyCap),
+              ),
+            )
+          }
           className="editorial-input"
         />
       </label>
@@ -146,10 +222,10 @@ export function AddToCartPanel({
           type="button"
           size="lg"
           onClick={onAdd}
-          disabled={!product.inStock}
+          disabled={!available || qtyCap < 1}
           className="w-full"
         >
-          {product.inStock ? "Add to cart" : "Sold out"}
+          {available ? "Add to cart" : "Sold out"}
         </Button>
         <ButtonLink href="/cart" variant="secondary" size="lg" className="w-full">
           View cart
@@ -157,8 +233,9 @@ export function AddToCartPanel({
       </div>
 
       <p className="text-xs leading-relaxed text-neutral-400">
-        Availability is demo stock for local browsing. Orders are confirmed with
-        the store on WhatsApp.
+        Availability is demo stock stored with the catalog in this browser.
+        Orders are confirmed with the store on WhatsApp — this is not a
+        production inventory system.
       </p>
     </div>
   );

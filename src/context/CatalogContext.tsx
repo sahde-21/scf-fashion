@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { STORAGE_KEYS } from "@/lib/config";
+import { withDerivedAvailability } from "@/lib/inventory";
 import {
   getPublishedProducts,
   mergeProducts,
@@ -69,14 +70,15 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     setOverrides((prev) => {
       const id = product.id || createId("p");
       const slug = product.slug || slugify(product.name);
+      const next = withDerivedAvailability({
+        ...product,
+        id,
+        slug,
+        createdAt: product.createdAt || new Date().toISOString(),
+      });
       return {
         ...prev,
-        [id]: {
-          ...product,
-          id,
-          slug,
-          createdAt: product.createdAt || new Date().toISOString(),
-        },
+        [id]: next,
       };
     });
   }, []);
