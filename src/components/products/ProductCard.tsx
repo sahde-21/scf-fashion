@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/Badge";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { Price } from "@/components/ui/Price";
 import { isProductAvailable } from "@/lib/inventory";
 import { getGalleryImages } from "@/lib/product-images";
@@ -16,43 +17,57 @@ export function ProductCard({ product }: { product: Product }) {
   const secondary = gallery[1] && gallery[1] !== primary ? gallery[1] : null;
   const showAlt = hovered && secondary;
   const available = isProductAvailable(product);
+  const swatches = product.colors.slice(0, 5);
 
   return (
-    <article className="group animate-fade-up">
+    <article className="group flex h-full flex-col">
       <Link
         href={`/products/${product.slug}`}
-        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+        className="flex h-full flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <div className="relative aspect-[3/4] overflow-hidden bg-[var(--surface)]">
+        <div className="relative aspect-[3/4] w-full overflow-hidden bg-[var(--surface)]">
           {primary ? (
             <Image
               src={showAlt && secondary ? secondary : primary}
               alt={product.name}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover transition duration-500 ease-out group-hover:scale-[1.02]"
+              className="object-cover object-center transition duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025]"
               key={showAlt ? secondary : primary}
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-xs uppercase tracking-wider text-neutral-400">
-              No image
-            </div>
+            <ImagePlaceholder />
           )}
-          <div className="absolute left-2 top-2 flex flex-col gap-1">
+          <div className="absolute left-3 top-3 flex flex-col gap-1.5">
             {product.newArrival ? <Badge>New</Badge> : null}
             {!available ? <Badge tone="rose">Sold out</Badge> : null}
           </div>
         </div>
-        <div className="mt-3 space-y-1.5">
-          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-            {product.category}
-          </p>
-          <h3 className="text-sm font-medium tracking-wide text-neutral-900 transition group-hover:text-neutral-600 sm:text-[15px]">
+        <div className="mt-4 flex flex-1 flex-col gap-2 px-0.5">
+          <h3 className="text-[0.8rem] font-medium leading-snug tracking-[0.04em] text-[var(--ink)] transition group-hover:text-[var(--muted)] sm:text-[0.85rem]">
             {product.name}
           </h3>
           <Price usd={product.priceUsd} compact />
+          {swatches.length > 0 ? (
+            <ul
+              className="mt-auto flex flex-wrap items-center gap-1.5 pt-1"
+              aria-label="Available colors"
+            >
+              {swatches.map((color) => (
+                <li key={color.id}>
+                  <span
+                    className="block h-2.5 w-2.5 rounded-full border border-[var(--line-strong)]"
+                    style={{ backgroundColor: color.hex }}
+                    title={color.name}
+                  >
+                    <span className="sr-only">{color.name}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </Link>
     </article>

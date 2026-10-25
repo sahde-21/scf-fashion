@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import {
   getGalleryImages,
   getProductViews,
@@ -70,8 +71,8 @@ export function ProductGallery({
 
   if (!current) {
     return (
-      <div className="flex aspect-[3/4] items-center justify-center bg-[var(--surface)] px-6 text-center text-sm text-neutral-500">
-        No verified image available for this selection.
+      <div className="aspect-[3/4] overflow-hidden">
+        <ImagePlaceholder label="Verified photo coming soon" />
       </div>
     );
   }
@@ -91,7 +92,7 @@ export function ProductGallery({
           fill
           priority
           sizes="(max-width: 768px) 100vw, 55vw"
-          className="object-cover animate-image-swap"
+          className="object-cover object-center animate-image-swap"
           key={current}
           onError={() => markBroken(current)}
         />
@@ -114,10 +115,10 @@ export function ProductGallery({
                 disabled={disabled}
                 onClick={() => setMode(view)}
                 className={cn(
-                  "min-w-[5.5rem] border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
+                  "min-w-[5.5rem] border px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.2em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
                   mode === view
                     ? "border-neutral-900 bg-neutral-900 text-white"
-                    : "border-neutral-200 text-neutral-600 hover:border-neutral-400",
+                    : "border-[var(--line)] text-neutral-600 hover:border-neutral-400",
                   disabled && "cursor-not-allowed opacity-40",
                 )}
               >
@@ -159,10 +160,10 @@ export function ProductGallery({
                 }
                 aria-pressed={selected}
                 className={cn(
-                  "relative h-[4.5rem] w-14 shrink-0 overflow-hidden border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 sm:h-24 sm:w-[4.5rem]",
+                  "relative h-[4.75rem] w-14 shrink-0 overflow-hidden border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 sm:h-24 sm:w-[4.5rem]",
                   selected
                     ? "border-neutral-900"
-                    : "border-transparent opacity-70 hover:opacity-100",
+                    : "border-transparent opacity-65 hover:opacity-100",
                 )}
               >
                 <Image

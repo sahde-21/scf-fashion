@@ -26,14 +26,14 @@ export const CURRENCY_NOTE =
 
 /**
  * Bottom announcement ticker copy — edit in one place.
- * Repeated seamlessly in the UI; keep phrases short and uppercase-friendly.
+ * Quiet luxury tone; keep phrases short.
  */
 export const TICKER_MESSAGES = [
   "SCF FASHION",
-  "NEW DROPS",
-  "STREETWEAR ESSENTIALS",
-  "NEW COLLECTION",
-  "DISCOVER YOUR STYLE",
+  "QUIET LUXURY",
+  "REFINED ESSENTIALS",
+  "EDITORIAL LOOKS",
+  "WHATSAPP ORDERING",
 ] as const;
 
 export const STORE_CONTACT = {
@@ -54,35 +54,34 @@ export const CATEGORIES = [
     id: "women" as const,
     name: "Women",
     description: "Soft layers and elevated everyday essentials.",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80",
+    image: "/editorial/cat-women.jpg",
   },
   {
     id: "men" as const,
     name: "Men",
     description: "Clean tailoring with easy weekend pieces.",
-    image:
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=1200&q=80",
+    image: "/editorial/cat-men.jpg",
   },
   {
     id: "shoes" as const,
     name: "Shoes",
     description: "From city sneakers to evening heels.",
-    image:
-      "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=1200&q=80",
+    image: "/editorial/cat-shoes.jpg",
   },
   {
     id: "bags" as const,
     name: "Bags",
     description: "Structured totes and compact crossbodies.",
-    image:
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1200&q=80",
+    image: "/editorial/cat-bags.jpg",
   },
   {
     id: "accessories" as const,
     name: "Accessories",
     description: "Finishing touches with quiet polish.",
-    image:
-      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1200&q=80",
+    image: "/editorial/cat-accessories.jpg",
   },
 ];
+
+/** Honest storefront copy — update when the owner confirms real policies. */
+export const STORE_POLICY_NOTICE =
+  "Delivery timing, fees, and return rules are confirmed by the store on WhatsApp. This demo does not promise specific shipping windows.";

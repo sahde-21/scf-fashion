@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { LoadingBlock } from "@/components/ui/LoadingBlock";
 import { Price } from "@/components/ui/Price";
 import { useCart } from "@/context/CartContext";
@@ -30,21 +31,25 @@ export function CartView() {
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
+    <div className="grid gap-12 lg:grid-cols-[1fr_300px]">
       <ul className="space-y-0">
         {items.map((item) => (
           <li
             key={item.key}
-            className="flex gap-4 border-b border-neutral-200 py-5 animate-fade-up"
+            className="flex gap-4 border-b border-[var(--line)] py-6 animate-fade-up"
           >
-            <div className="relative h-32 w-24 shrink-0 overflow-hidden bg-[var(--surface)]">
-              <Image
-                src={item.image}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="96px"
-              />
+            <div className="relative h-36 w-28 shrink-0 overflow-hidden bg-[var(--surface)]">
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="112px"
+                />
+              ) : (
+                <ImagePlaceholder label="No photo" />
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-start justify-between gap-2">
@@ -52,14 +57,14 @@ export function CartView() {
                   <p className="text-sm font-medium tracking-wide text-neutral-900">
                     {item.name}
                   </p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.12em] text-neutral-400">
+                  <p className="mt-1.5 text-xs uppercase tracking-[0.14em] text-neutral-400">
                     Size {item.size} · {item.colorName}
                   </p>
                 </div>
                 <Price usd={item.priceUsd * item.quantity} compact />
               </div>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <label className="flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-neutral-500">
+              <div className="mt-5 flex flex-wrap items-center gap-4">
+                <label className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-neutral-500">
                   Qty
                   <input
                     type="number"
@@ -69,13 +74,13 @@ export function CartView() {
                     onChange={(e) =>
                       updateQuantity(item.key, Number(e.target.value) || 1)
                     }
-                    className="w-14 border-b border-neutral-200 bg-transparent py-1 text-sm outline-none focus:border-[var(--sky)]"
+                    className="w-14 border-b border-[var(--line)] bg-transparent py-1 text-sm outline-none focus:border-neutral-900"
                   />
                 </label>
                 <button
                   type="button"
                   onClick={() => removeItem(item.key)}
-                  className="text-xs uppercase tracking-[0.12em] text-neutral-500 transition hover:text-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+                  className="text-xs uppercase tracking-[0.14em] text-neutral-500 transition hover:text-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
                 >
                   Remove
                 </button>
@@ -85,8 +90,10 @@ export function CartView() {
         ))}
       </ul>
 
-      <aside className="h-fit space-y-5 border border-neutral-200 p-5">
-        <h2 className="font-display text-2xl text-neutral-900">Summary</h2>
+      <aside className="h-fit space-y-5 border border-[var(--line)] bg-[var(--surface)] p-6">
+        <h2 className="font-display text-2xl tracking-[0.04em] text-neutral-900">
+          Summary
+        </h2>
         <div className="flex items-start justify-between gap-3 text-sm">
           <span className="text-neutral-500">Subtotal</span>
           <Price usd={subtotalUsd} compact />

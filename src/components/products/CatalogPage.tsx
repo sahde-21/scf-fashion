@@ -92,18 +92,18 @@ export function CatalogPage() {
     });
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[220px_1fr] lg:gap-12">
+    <div className="grid gap-10 pb-8 lg:grid-cols-[220px_1fr] lg:gap-12 xl:grid-cols-[240px_1fr] xl:gap-16">
       <div className="lg:hidden">
         <button
           type="button"
           onClick={() => setFiltersOpen((v) => !v)}
-          className="flex w-full items-center justify-between border border-neutral-200 px-4 py-3 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-800"
+          className="flex min-h-12 w-full items-center justify-between border border-[var(--line)] bg-[var(--surface)] px-4 py-3.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--ink)]"
           aria-expanded={filtersOpen}
         >
           {filtersOpen ? "Hide filters" : "Show filters"}
-          <span className="text-neutral-400">{results.length} items</span>
+          <span className="text-[var(--muted)]">{results.length} items</span>
         </button>
-        <div className={cn("mt-4", filtersOpen ? "block" : "hidden")}>
+        <div className={cn("mt-5", filtersOpen ? "block" : "hidden")}>
           <ProductFiltersPanel
             filters={filters}
             options={options}
@@ -114,16 +114,18 @@ export function CatalogPage() {
       </div>
 
       <div className="hidden lg:block">
-        <ProductFiltersPanel
-          filters={filters}
-          options={options}
-          onChange={setFilters}
-          onReset={reset}
-        />
+        <div className="sticky top-[calc(var(--header-h)+1rem)] max-h-[calc(100vh-var(--header-h)-var(--ticker-h)-2rem)] overflow-y-auto pr-1">
+          <ProductFiltersPanel
+            filters={filters}
+            options={options}
+            onChange={setFilters}
+            onReset={reset}
+          />
+        </div>
       </div>
 
-      <div>
-        <p className="mb-6 hidden text-[11px] uppercase tracking-[0.14em] text-neutral-400 lg:block">
+      <div className="min-w-0">
+        <p className="mb-8 hidden text-[11px] uppercase tracking-[0.16em] text-[var(--muted)] lg:block">
           Showing {results.length} of {publishedProducts.length}
         </p>
         <ProductGrid products={results} />
