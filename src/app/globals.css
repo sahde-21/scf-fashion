@@ -1,18 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --surface: #f7f6f3;
-  --foreground: #111111;
-  --muted: #6b6b6b;
-  --line: #e8e8e6;
-  --ink: #111111;
-  /* Electric neon green for the announcement ticker */
-  --ticker: #b8ff3c;
-  --accent: #111111;
-  /* Kept for any legacy class references; no longer a primary brand accent */
-  --sky: #111111;
-  --sky-soft: #f0f0ee;
+  /* Quiet luxury — warm ivory, cream, deep black, matte gold */
+  --background: #faf8f5;
+  --surface: #f3efe8;
+  --surface-deep: #ebe4da;
+  --foreground: #141210;
+  --muted: #7a756c;
+  --line: #e4ddd3;
+  --line-strong: #cfc6b8;
+  --ink: #141210;
+  --gold: #9a8563;
+  --gold-soft: rgba(154, 133, 99, 0.14);
+  --ticker-bg: #efeae2;
+  --ticker-fg: #141210;
+  /* Optional rare accent — never dominant */
+  --lime: #c8ff3d;
+  --accent: var(--gold);
+  --header-h: 3.75rem;
+  --announce-h: 2rem;
+  --ticker-h: 2.25rem;
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
@@ -33,17 +41,19 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-body), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-body), "Helvetica Neue", Helvetica, sans-serif;
   min-height: 100vh;
-  letter-spacing: 0.01em;
-  /* Space for fixed ticker */
-  padding-bottom: 2.75rem;
+  letter-spacing: 0.015em;
+  /* Clear fixed ticker so controls / CTAs are never obscured */
+  padding-bottom: calc(var(--ticker-h) + 1rem);
+  text-rendering: optimizeLegibility;
 }
 
 .font-display {
-  font-family: var(--font-display), "Arial Narrow", "Helvetica Neue", sans-serif;
-  letter-spacing: 0.04em;
-  font-weight: 700;
+  font-family: var(--font-display), "Times New Roman", Georgia, serif;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  text-transform: none;
 }
 
 a {
@@ -52,7 +62,7 @@ a {
 }
 
 ::selection {
-  background: var(--ticker);
+  background: var(--gold-soft);
   color: var(--ink);
 }
 
@@ -65,36 +75,122 @@ a {
   border: 0;
   border-bottom: 1px solid var(--line);
   background: transparent;
-  padding: 0.65rem 0;
+  padding: 0.75rem 0;
   font-size: 0.875rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.3s var(--ease-out-expo);
 }
 
 .editorial-input:focus {
-  border-bottom-color: var(--ink);
+  border-bottom-color: var(--gold);
 }
 
-/* —— Announcement ticker —— */
+.surface-wash {
+  background:
+    radial-gradient(110% 70% at 50% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
+    linear-gradient(180deg, var(--surface) 0%, var(--background) 100%);
+}
+
+.section-rule {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+}
+
+.gold-rule {
+  height: 1px;
+  width: 2.5rem;
+  background: var(--gold);
+  border: 0;
+  opacity: 0.7;
+}
+
+.label-quiet {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* —— Top announcement bar (reference-aligned) —— */
+.announcement-bar {
+  background: var(--surface-deep);
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  min-height: var(--announce-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.75rem;
+}
+
+.announcement-bar__text {
+  margin: 0;
+  text-align: center;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.announcement-bar__text--mobile {
+  display: block;
+  letter-spacing: 0.08em;
+  font-size: 0.55rem;
+}
+
+.announcement-bar__text--desktop {
+  display: none;
+}
+
+.announcement-bar__sep {
+  margin-inline: 0.55rem;
+  color: var(--gold);
+  opacity: 0.75;
+}
+
+@media (min-width: 640px) {
+  .announcement-bar {
+    padding: 0.4rem 1rem;
+  }
+
+  .announcement-bar__text--mobile {
+    display: none;
+  }
+
+  .announcement-bar__text--desktop {
+    display: block;
+    letter-spacing: 0.18em;
+  }
+}
+
+/* —— Announcement ticker (cream / ink — not neon) —— */
 .announcement-ticker {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 40;
+  z-index: 30;
   overflow: hidden;
-  background: var(--ticker);
-  color: #0a0a0a;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  height: 2.75rem;
+  background: var(--ticker-bg);
+  color: var(--ticker-fg);
+  border-top: 1px solid var(--line);
+  height: var(--ticker-h);
   display: flex;
   align-items: center;
+  pointer-events: none;
 }
 
 .announcement-ticker__track {
   display: flex;
   width: max-content;
-  animation: ticker-scroll 42s linear infinite;
+  animation: ticker-scroll 56s linear infinite;
   will-change: transform;
 }
 
@@ -108,20 +204,24 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 1.25rem;
-  padding-inline: 0.35rem 1.25rem;
+  padding-inline: 0.35rem 1.75rem;
   white-space: nowrap;
 }
 
 .announcement-ticker__text {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
 }
 
 .announcement-ticker__dot {
-  font-size: 0.45rem;
-  opacity: 0.55;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.65;
+  flex-shrink: 0;
 }
 
 @keyframes ticker-scroll {
@@ -136,7 +236,7 @@ a {
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -162,24 +262,65 @@ a {
   }
 }
 
+@keyframes rail-sway {
+  0%,
+  100% {
+    transform: rotate(-0.35deg);
+  }
+  50% {
+    transform: rotate(0.35deg);
+  }
+}
+
+@keyframes hero-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.03);
+  }
+}
+
 .animate-fade-up {
-  animation: fade-up 0.55s ease-out both;
+  animation: fade-up 0.8s var(--ease-out-expo) both;
 }
 
 .animate-fade-up-delay {
-  animation: fade-up 0.6s ease-out 0.1s both;
+  animation: fade-up 0.85s var(--ease-out-expo) 0.1s both;
 }
 
 .animate-fade-up-delay-2 {
-  animation: fade-up 0.6s ease-out 0.18s both;
+  animation: fade-up 0.85s var(--ease-out-expo) 0.18s both;
 }
 
 .animate-fade-in {
-  animation: fade-in 0.35s ease-out both;
+  animation: fade-in 0.5s ease-out both;
 }
 
 .animate-image-swap {
-  animation: image-swap 0.4s ease-out both;
+  animation: image-swap 0.55s ease-out both;
+}
+
+.animate-rail-sway {
+  animation: rail-sway 6s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.animate-hero-media {
+  animation: hero-kenburns 22s ease-out forwards;
+}
+
+.reveal-target {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.75s var(--ease-out-expo),
+    transform 0.75s var(--ease-out-expo);
+}
+
+.reveal-target--visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -215,15 +356,26 @@ a {
     scroll-behavior: auto !important;
   }
 
-  /* Keep ticker readable when motion is reduced — override the blanket rule */
   .announcement-ticker__track {
     animation: none !important;
+  }
+
+  .animate-rail-sway,
+  .animate-hero-media {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .reveal-target {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 
 @media (max-width: 480px) {
   .announcement-ticker__text {
-    font-size: 0.62rem;
+    font-size: 0.55rem;
     letter-spacing: 0.16em;
   }
 }

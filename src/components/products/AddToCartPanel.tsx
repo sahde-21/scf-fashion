@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Price } from "@/components/ui/Price";
@@ -52,6 +53,9 @@ export function AddToCartPanel({
 
   const sizeStock = getStockForSize(product, size);
   const qtyCap = maxOrderQuantity(product, size);
+  const fabricTags = product.tags.filter((t) =>
+    ["linen", "silk", "cotton", "wool", "leather", "knit", "oxford"].includes(t),
+  );
 
   useEffect(() => {
     if (qtyCap > 0 && quantity > qtyCap) {
@@ -91,19 +95,19 @@ export function AddToCartPanel({
   };
 
   return (
-    <div className="space-y-7 lg:sticky lg:top-28">
-      <div className="space-y-3 border-b border-neutral-200 pb-6">
-        <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+    <div className="space-y-9 lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:pb-[calc(var(--ticker-h)+1rem)]">
+      <div className="space-y-3 border-b border-[var(--line)] pb-8">
+        <p className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-[var(--muted)]">
           {product.category}
         </p>
-        <h1 className="font-display text-3xl tracking-[0.02em] text-neutral-900 sm:text-4xl">
+        <h1 className="font-display text-3xl font-medium tracking-[0.02em] text-[var(--ink)] sm:text-4xl">
           {product.name}
         </h1>
         <Price usd={product.priceUsd} />
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm font-light text-[var(--muted)]">
           {available ? "In stock" : "Currently unavailable"}
           {available && sizeStock !== null ? (
-            <span className="text-neutral-400">
+            <span>
               {" "}
               · {sizeStock} left in {size}
             </span>
@@ -111,12 +115,33 @@ export function AddToCartPanel({
         </p>
       </div>
 
-      <p className="text-sm leading-relaxed text-neutral-600">
+      <p className="text-sm font-light leading-relaxed text-[var(--muted)]">
         {product.description}
       </p>
 
+      {fabricTags.length ? (
+        <dl className="grid gap-3 border-y border-[var(--line)] py-5 text-sm">
+          <div className="flex justify-between gap-4">
+            <dt className="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[var(--muted)]">
+              Fabric & details
+            </dt>
+            <dd className="text-right text-[var(--ink)] capitalize">
+              {fabricTags.join(" · ")}
+            </dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[var(--muted)]">
+              Fit notes
+            </dt>
+            <dd className="text-right font-light text-[var(--muted)]">
+              Confirm sizing on WhatsApp if unsure
+            </dd>
+          </div>
+        </dl>
+      ) : null}
+
       <fieldset>
-        <legend className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+        <legend className="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[var(--muted)]">
           Size
         </legend>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -138,12 +163,12 @@ export function AddToCartPanel({
                 }
                 onClick={() => setSize(value)}
                 className={cn(
-                  "min-w-11 border px-3 py-2 text-xs tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
+                  "min-h-11 min-w-11 border px-3 py-2.5 text-xs tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]",
                   size === value
-                    ? "border-neutral-900 bg-neutral-900 text-white"
-                    : "border-neutral-200 text-neutral-700 hover:border-neutral-400",
+                    ? "border-[var(--ink)] bg-[var(--ink)] text-[var(--background)]"
+                    : "border-[var(--line)] text-[var(--ink)] hover:border-[var(--ink)]/50",
                   !sizeOk &&
-                    "cursor-not-allowed border-neutral-100 text-neutral-300 line-through hover:border-neutral-100",
+                    "cursor-not-allowed border-[var(--line)] text-[var(--line-strong)] line-through hover:border-[var(--line)]",
                 )}
               >
                 {value}
@@ -154,7 +179,7 @@ export function AddToCartPanel({
       </fieldset>
 
       <fieldset>
-        <legend className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+        <legend className="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[var(--muted)]">
           Color{color ? ` — ${color.name}` : ""}
         </legend>
         <div className="mt-3 flex flex-wrap gap-3">
@@ -167,17 +192,17 @@ export function AddToCartPanel({
               aria-pressed={colorId === c.id}
               onClick={() => onColorChange(c.id)}
               className={cn(
-                "h-8 w-8 rounded-full border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
+                "h-9 w-9 rounded-full border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]",
                 colorId === c.id
-                  ? "scale-110 border-neutral-900"
-                  : "border-neutral-200 hover:border-neutral-400",
+                  ? "scale-105 border-[var(--ink)] ring-1 ring-[var(--ink)] ring-offset-2 ring-offset-[var(--background)]"
+                  : "border-[var(--line)] hover:border-[var(--ink)]/40",
               )}
               style={{ backgroundColor: c.hex }}
             />
           ))}
         </div>
         {color && !color.images?.length ? (
-          <p className="mt-2 text-xs text-neutral-400">
+          <p className="mt-2 text-xs font-light text-[var(--muted)]">
             Color selected for order. A dedicated photo for this colorway is not
             in the catalog yet.
           </p>
@@ -185,7 +210,7 @@ export function AddToCartPanel({
       </fieldset>
 
       <label className="block max-w-[7rem] space-y-2">
-        <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+        <span className="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[var(--muted)]">
           Quantity
         </span>
         <input
@@ -212,8 +237,19 @@ export function AddToCartPanel({
         </p>
       ) : null}
       {added ? (
-        <p className="text-sm text-[var(--accent)]" role="status">
-          Added to cart.
+        <p
+          className="border border-[var(--ink)] bg-[var(--ink)] px-4 py-3.5 text-sm font-light text-[var(--background)] animate-fade-up"
+          role="status"
+        >
+          Added to bag —{" "}
+          <Link href="/cart" className="underline underline-offset-4">
+            view cart
+          </Link>{" "}
+          or{" "}
+          <Link href="/checkout" className="underline underline-offset-4">
+            WhatsApp checkout
+          </Link>
+          .
         </p>
       ) : null}
 
@@ -225,18 +261,41 @@ export function AddToCartPanel({
           disabled={!available || qtyCap < 1}
           className="w-full"
         >
-          {available ? "Add to cart" : "Sold out"}
+          {available ? (added ? "Added" : "Add to cart") : "Sold out"}
         </Button>
         <ButtonLink href="/cart" variant="secondary" size="lg" className="w-full">
           View cart
         </ButtonLink>
+        <ButtonLink href="/checkout" variant="ghost" size="lg" className="w-full">
+          WhatsApp checkout
+        </ButtonLink>
       </div>
 
-      <p className="text-xs leading-relaxed text-neutral-400">
-        Availability is demo stock stored with the catalog in this browser.
-        Orders are confirmed with the store on WhatsApp — this is not a
-        production inventory system.
-      </p>
+      <div className="space-y-2 border-t border-[var(--line)] pt-5 text-xs leading-relaxed text-neutral-400">
+        <p>
+          Availability is demo stock stored with the catalog in this browser —
+          not a shared warehouse.
+        </p>
+        <p>
+          Delivery fees and timing are confirmed on WhatsApp after you send your
+          order. This page does not promise shipping windows.
+        </p>
+        <p>
+          <Link
+            href="/delivery"
+            className="underline underline-offset-2 hover:text-neutral-700"
+          >
+            Delivery info
+          </Link>
+          {" · "}
+          <Link
+            href="/returns"
+            className="underline underline-offset-2 hover:text-neutral-700"
+          >
+            Returns
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

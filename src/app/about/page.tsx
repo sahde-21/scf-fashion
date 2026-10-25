@@ -4,40 +4,42 @@ import { STORE_NAME } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `About ${STORE_NAME} — premium streetwear with WhatsApp ordering.`,
+  description: `About ${STORE_NAME} — quiet luxury fashion with WhatsApp ordering.`,
 };
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24">
-      <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400 animate-fade-up">
+      <div className="mb-5 h-px w-10 bg-[var(--gold)] opacity-70" />
+      <p className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-[var(--muted)] animate-fade-up">
         About
       </p>
-      <h1 className="mt-3 font-display text-4xl tracking-[0.04em] text-neutral-900 sm:text-5xl animate-fade-up-delay">
+      <h1 className="mt-3 font-display text-4xl font-medium tracking-[0.02em] text-[var(--ink)] sm:text-5xl animate-fade-up-delay">
         {STORE_NAME}
       </h1>
-      <div className="mt-8 space-y-5 text-sm leading-relaxed text-neutral-600 animate-fade-up-delay-2">
+      <div className="mt-8 space-y-5 text-sm font-light leading-relaxed text-[var(--muted)] animate-fade-up-delay-2">
         <p>
-          SCF Fashion is a local demo storefront for bold, minimal streetwear.
-          Browse the hanging rail, choose colors and sizes, and send your bag
-          to the store on WhatsApp — no card payments on this site.
+          SCF Fashion is a quiet-luxury demo storefront for editorial fashion.
+          Browse the hanging rail, choose colors and sizes, and send your bag to
+          the store on WhatsApp — no card payments on this site.
         </p>
         <p>
           Prices are shown in USD and IQD using a fixed demo exchange rate.
-          Product edits in the local admin stay in your browser only and are
-          not a production inventory system.
+          Product imagery is illustrative for this phase and does not claim to
+          represent verified warehouse photography. Local admin edits stay in
+          your browser only.
         </p>
       </div>
-      <div className="mt-10 flex flex-wrap gap-4">
+      <div className="mt-12 flex flex-wrap gap-6">
         <Link
           href="/products"
-          className="text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-900 underline-offset-4 hover:underline"
+          className="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-[var(--ink)] underline-offset-4 hover:underline"
         >
-          Shop the collection
+          Explore collection
         </Link>
         <Link
           href="/contact"
-          className="text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500 underline-offset-4 hover:underline hover:text-neutral-900"
+          className="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-[var(--muted)] underline-offset-4 hover:underline hover:text-[var(--ink)]"
         >
           Contact
         </Link>

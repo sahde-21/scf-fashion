@@ -236,8 +236,8 @@ export function AdminApp() {
         </div>
         {!session.passwordConfigured ? (
           <EmptyState
-            title="Admin password not configured"
-            description="Copy .env.example to .env.local, set ADMIN_DEMO_PASSWORD, then restart the Next.js server."
+            title="Admin authentication not configured"
+            description="Copy .env.example to .env.local, set ADMIN_DEMO_PASSWORD and ADMIN_SESSION_SECRET, then restart the Next.js server."
           />
         ) : (
           <form onSubmit={onLogin} className="space-y-4 rounded-2xl border border-sky-100 bg-white p-6">
@@ -498,12 +498,31 @@ export function AdminApp() {
                         {order.customerPhone} ·{" "}
                         {new Date(order.createdAt).toLocaleString()}
                       </p>
+                      {order.city || order.address ? (
+                        <p className="mt-1 text-sm text-slate-500">
+                          {[order.city, order.address].filter(Boolean).join(" · ")}
+                        </p>
+                      ) : null}
+                      {order.locationMethod && order.locationMethod !== "none" ? (
+                        <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">
+                          Location: {order.locationMethod.replace("_", " ")}
+                        </p>
+                      ) : null}
                     </div>
                     <Price usd={order.totalUsd} compact />
                   </div>
-                  {order.notes ? (
-                    <p className="mt-3 text-sm text-slate-600">{order.notes}</p>
+                  {order.deliveryInstructions ? (
+                    <p className="mt-3 text-sm text-slate-600">
+                      Delivery: {order.deliveryInstructions}
+                    </p>
                   ) : null}
+                  {order.notes ? (
+                    <p className="mt-2 text-sm text-slate-600">{order.notes}</p>
+                  ) : null}
+                  <p className="mt-2 text-xs text-slate-400">
+                    Map pin links are not stored here — only in the WhatsApp
+                    message the customer sent.
+                  </p>
                   <ul className="mt-4 space-y-1 text-sm text-slate-600">
                     {order.items.map((item) => (
                       <li key={item.key}>

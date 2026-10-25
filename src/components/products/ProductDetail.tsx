@@ -31,8 +31,8 @@ export function ProductDetail({ slug }: { slug: string }) {
   const related = relatedProducts(product, publishedProducts);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-      <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
+      <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
         <ProductGallery product={product} colorId={colorId} />
         <AddToCartPanel
           product={product}
@@ -41,9 +41,13 @@ export function ProductDetail({ slug }: { slug: string }) {
         />
       </div>
       {related.length ? (
-        <section className="mt-16 border-t border-neutral-200 pt-12 sm:mt-20">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <h2 className="font-display text-3xl tracking-[0.02em] text-neutral-900">
+        <section className="mt-20 border-t border-[var(--line)] pt-14 sm:mt-28">
+          <div className="mb-10">
+            <div className="mb-4 h-px w-10 bg-[var(--gold)] opacity-70" />
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-[var(--muted)]">
+              Continue browsing
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-medium tracking-[0.02em] text-[var(--ink)]">
               You may also like
             </h2>
           </div>

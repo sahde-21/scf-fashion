@@ -1,57 +1,72 @@
 import type { Metadata } from "next";
-import { DM_Sans, Syne } from "next/font/google";
+import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { AnnouncementTicker } from "@/components/layout/AnnouncementTicker";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Providers } from "@/components/layout/Providers";
 import { CURRENCY_NOTE, STORE_NAME } from "@/lib/config";
+import { loadStorefrontCatalogBootstrap } from "@/lib/catalog/load-storefront-catalog";
 import "./globals.css";
 
-const display = Syne({
+const display = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
 
-const body = DM_Sans({
+const body = Outfit({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-body",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: `${STORE_NAME} — Premium streetwear`,
+    default: `${STORE_NAME} — Quiet luxury`,
     template: `%s · ${STORE_NAME}`,
   },
   description:
-    "SCF Fashion is a premium streetwear storefront with dual USD/IQD pricing and WhatsApp checkout.",
+    "SCF Fashion — quiet luxury fashion with an editorial identity, dual USD/IQD pricing, and WhatsApp checkout.",
   metadataBase: new URL("http://localhost:3000"),
   openGraph: {
     title: STORE_NAME,
     description:
-      "Bold minimal streetwear essentials and WhatsApp ordering. Demo storefront for local development.",
+      "Quiet luxury fashion. Editorial looks, dual-currency pricing, WhatsApp ordering.",
     type: "website",
+    images: [{ url: "/editorial/hero.jpg", width: 2000, height: 1333, alt: STORE_NAME }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: STORE_NAME,
+    description:
+      "Quiet luxury fashion. Editorial looks, dual-currency pricing, WhatsApp ordering.",
+    images: ["/editorial/hero.jpg"],
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Phase B2: flag off → seed mode (no DB). Flag on → Neon or error (no seed fallback).
+  const catalogBootstrap = await loadStorefrontCatalogBootstrap();
+
   return (
     <html lang="en">
       <body className={`${display.variable} ${body.variable} antialiased`}>
-        <Providers>
+        <Providers catalogBootstrap={catalogBootstrap}>
           <div className="flex min-h-screen flex-col">
             <a
               href="#main"
-              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:shadow"
+              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:bg-[var(--background)] focus:px-3 focus:py-2 focus:shadow"
             >
               Skip to content
             </a>
+            <AnnouncementBar />
             <Header />
             <main id="main" className="flex-1">
               {children}

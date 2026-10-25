@@ -13,22 +13,22 @@ export function Price({
   return (
     <span
       className={cn(
-        "inline-flex flex-wrap items-baseline gap-x-2 gap-y-0.5",
+        "inline-flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5",
         className,
       )}
     >
       <span
         className={cn(
-          "font-medium tracking-wide text-neutral-900",
-          compact ? "text-sm" : "text-base",
+          "font-medium tracking-wide text-[var(--ink)] tabular-nums",
+          compact ? "text-[0.9rem]" : "text-base",
         )}
       >
         {formatUsd(usd)}
       </span>
       <span
         className={cn(
-          "tracking-wide text-neutral-500",
-          compact ? "text-xs" : "text-sm",
+          "tracking-wide text-[var(--muted)] tabular-nums",
+          compact ? "text-[0.72rem]" : "text-sm",
         )}
       >
         {formatIqd(usd)}

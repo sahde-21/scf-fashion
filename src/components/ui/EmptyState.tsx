@@ -10,8 +10,8 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center border border-dashed border-neutral-200 bg-[var(--surface)] px-6 py-20 text-center animate-fade-up">
-      <h2 className="font-display text-3xl font-normal text-neutral-900">
+    <div className="flex flex-col items-center justify-center border border-dashed border-[var(--line)] bg-[var(--surface)] px-6 py-24 text-center animate-fade-up">
+      <h2 className="font-display text-3xl tracking-[0.04em] font-normal text-neutral-900">
         {title}
       </h2>
       <p className="mt-3 max-w-md text-sm leading-relaxed text-neutral-500">

@@ -18,7 +18,7 @@ export type ProductColor = {
 };
 
 /**
- * Explicit front/back assets. Only set when imagery genuinely matches the view.
+ * Explicit front/back assets. Only set when imagery is a real front/back pair.
  * Do not invent a “back” from an unrelated alternate photo.
  */
 export type ProductViews = {
@@ -66,17 +66,37 @@ export type CartItem = {
   priceUsd: number;
 };
 
+/**
+ * Checkout form. Location fields are optional.
+ * Maps links are customer-provided share URLs only — never auto-captured GPS.
+ */
+export type LocationMethod = "none" | "address" | "maps_link" | "whatsapp_share";
+
 export type CheckoutFormData = {
   name: string;
   phone: string;
+  city: string;
+  address: string;
+  deliveryInstructions: string;
+  locationMethod: LocationMethod;
+  /** Customer-pasted Google Maps / OSM / Apple Maps share URL (optional). */
+  mapsLink: string;
   notes: string;
 };
 
+/**
+ * Local admin order draft. Maps pin URLs are intentionally omitted from
+ * persistence — they appear only in the WhatsApp message the customer sends.
+ */
 export type LocalOrder = {
   id: string;
   createdAt: string;
   customerName: string;
   customerPhone: string;
+  city?: string;
+  address?: string;
+  deliveryInstructions?: string;
+  locationMethod?: LocationMethod;
   notes: string;
   items: CartItem[];
   totalUsd: number;

@@ -7,12 +7,25 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "images:download": "node scripts/download-product-images.mjs",
+    "images:correct": "node scripts/correct-mismatched-images.mjs",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "npx tsx scripts/seed-from-products.ts",
+    "test:seed-plan": "npx tsx --test src/db/seed-plan.offline.test.ts",
+    "test:catalog-b1": "npx tsx --conditions=react-server --test src/lib/catalog/catalog.offline.test.ts",
+    "test:catalog-b2": "npx tsx --conditions=react-server --test src/lib/catalog/catalog.offline.test.ts src/lib/catalog/storefront-b2.offline.test.ts",
+    "test:admin-b3a1": "npx tsx --test src/lib/admin-auth.offline.test.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "drizzle-orm": "^0.45.4",
     "next": "15.5.28",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -20,6 +33,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^18.0.9",
+    "drizzle-kit": "^0.31.11",
     "eslint": "^9",
     "eslint-config-next": "15.5.28",
     "tailwindcss": "^4",
